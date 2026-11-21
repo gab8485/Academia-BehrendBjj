@@ -1156,7 +1156,7 @@ nav li a{
     .header .navbar{
         position: absolute;
         top:100%; right: -100%;
-        background: grey;
+       background: #15151f;
         width: 30rem;
         height: calc(60vh - 9.5rem);
     }
@@ -1604,4 +1604,42 @@ nav li a{
     font-weight: 800;
     letter-spacing: 0.02em;
     line-height: 0.95;
+}
+
+@media (max-width: 991px) {
+    .header .navbar.active {
+        right: 0;
+        margin-right: 24px;
+        width: min(330px, calc(100vw - 48px));
+        height: auto;
+        max-height: 70vh;
+        overflow-y: auto;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        align-items: stretch;
+        padding: 12px;
+        background: #15151f;
+        border: 1px solid #303044;
+        border-radius: 14px;
+        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4);
+    }
+
+    .header .navbar.active a {
+        display: block;
+        margin: 0;
+        padding: 10px 12px;
+        color: #fff;
+        white-space: normal;
+    }
+
+    .header .navbar.active .dropdown-menu {
+        position: static;
+        margin: 4px 0 8px 12px;
+        padding: 4px;
+        background: #242438;
+        border-radius: 8px;
+        box-shadow: none;
+    }
 }
