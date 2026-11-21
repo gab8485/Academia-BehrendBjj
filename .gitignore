@@ -11,3 +11,9 @@ ENV/
 data/
 .DS_Store
 Thumbs.db
+.venv/
+.venv312/
+.env
+*.db
+*.db-*
+__pycache__/
