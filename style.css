@@ -1145,7 +1145,7 @@ nav li a{
 
     #menu-btn{
         display: block;
-        color: rgb(3, 3, 113);
+        color: blue;
     }
 
     .btn1{
@@ -1581,4 +1581,27 @@ nav li a{
     right: 0;
 
   }
+}
+.titulo-academia,
+.titulo-academia span {
+    font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+    color: #fff;
+    text-transform: uppercase;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.85);
+}
+
+.titulo-academia {
+    font-size: clamp(1.8rem, 3vw, 3.6rem);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    line-height: 1.1;
+}
+
+.titulo-academia span {
+    display: block;
+    margin-top: 0.3rem;
+    font-size: clamp(4rem, 8vw, 10rem);
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    line-height: 0.95;
 }
