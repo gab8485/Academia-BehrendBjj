@@ -1,0 +1,15 @@
+services:
+  web:
+    build: .
+    container_name: behrend_bjj_app
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=sqlite:///./data/behrend_bjj.db
+      - BEHREND_SECRET_KEY=behrend-bjj-ceub-2026-prod-secret-key
+    volumes:
+      - behrend_sqlite_data:/app/data
+    restart: unless-stopped
+
+volumes:
+  behrend_sqlite_data:

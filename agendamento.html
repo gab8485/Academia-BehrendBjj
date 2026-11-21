@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agendar Aula Experimental — Behrend BJJ</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="header">
+    <section class="flex">
+        <a href="index.html" class="logo">
+            <img src="./img/logoacademia1.png" alt="Logo Behrend BJJ">
+        </a>
+
+        <nav class="navbar">
+            <a href="index.html">Home</a>
+            <a href="sobre.html">Sobre</a>
+            <li class="dropdown">
+                <a href="index.html#menu">Modalidades</a>
+                <div class="dropdown-menu">
+                    <a href="jiujitsuadulto.html">Jiu Jitsu Adulto</a>
+                    <a href="jiujitsuinfantil.html">Jiu Jitsu Infantil</a>
+                    <a href="judoadulto.html">Judo Adulto</a>
+                    <a href="judoinfantil.html">Judo Infantil</a>
+                    <a href="muaythay.html">Muay Thay</a>
+                </div>
+            </li>
+            <a href="horarios.html">Horários</a>
+            <a href="index.html#review">Unidades</a>
+            <a href="endereço.html">Endereço</a>
+            <a href="agendamento.html">Agende sua aula experimental</a>
+            <a href="painel.html">Painel</a>
+        </nav>
+
+        <div>
+            <a href="#form-agendamento" class="btn1">Começar agora</a>
+        </div>
+
+        <div class="icons">
+            <div class="fas fa-bars" id="menu-btn"></div>
+        </div>
+    </section>
+</header>
+
+<section class="app-section" style="padding-top: 12rem;">
+    <h1 class="heading">Agende sua <span>Aula Experimental</span></h1>
+    <p class="section-subtitle">
+        Escolha a modalidade, verifique as vagas disponíveis em tempo real e receba seu protocolo imediato.
+    </p>
+
+    <div class="app-grid">
+        <!-- Formulário de Agendamento -->
+        <div class="app-card">
+            <h3><i class="fas fa-dumbbell"></i> Novo Agendamento</h3>
+            <form id="form-agendamento" class="app-form">
+                <label for="ag-nome">Nome completo *</label>
+                <input type="text" id="ag-nome" placeholder="Ex: Lucas Oliveira" required minlength="3">
+
+                <label for="ag-email">E-mail *</label>
+                <input type="email" id="ag-email" placeholder="lucas@email.com" required>
+
+                <label for="ag-telefone">Telefone / WhatsApp *</label>
+                <input type="tel" id="ag-telefone" placeholder="(61) 99999-0000" required>
+
+                <label for="turma-select">Turma e Horário *</label>
+                <select id="turma-select" required>
+                    <option value="">Carregando turmas da API /api/v1/turmas...</option>
+                </select>
+
+                <div class="form-row-2">
+                    <div>
+                        <label for="ag-data">Data da Aula *</label>
+                        <input type="date" id="ag-data" required>
+                    </div>
+                    <div>
+                        <label for="ag-nivel">Nível de Experiência *</label>
+                        <select id="ag-nivel" required>
+                            <option value="Iniciante">Iniciante (Primeira vez)</option>
+                            <option value="Intermediário">Intermediário</option>
+                            <option value="Avançado">Avançado / Atleta</option>
+                        </select>
+                    </div>
+                </div>
+
+                <label for="ag-obs">Observações (opcional)</label>
+                <input type="text" id="ag-obs" placeholder="Precisa de kimono emprestado? Alguma restrição física?">
+
+                <button type="submit" class="btn-smais" style="width:100%;margin-top:1.5rem;">
+                    Confirmar Agendamento Experimental
+                </button>
+            </form>
+
+            <div id="agendamento-resultado" style="display:none;margin-top:2rem;"></div>
+        </div>
+
+        <!-- Consulta de Protocolo & Quadro de Vagas -->
+        <div class="app-card">
+            <h3><i class="fas fa-search"></i> Consultar Meu Agendamento</h3>
+            <p style="font-size:1.4rem;color:#ccc;margin-bottom:1.5rem;">
+                Já agendou? Digite seu número de protocolo (ex: <code>BJJ-A1B2C3</code>) ou o e-mail cadastrado para acompanhar o status.
+            </p>
+            <form id="form-consulta-protocolo" class="app-form" style="margin-bottom:2rem;">
+                <div style="display:flex;gap:1rem;">
+                    <input type="text" id="consulta-termo" placeholder="Protocolo (BJJ-...) ou seu e-mail" required style="flex:1;">
+                    <button type="submit" class="btn-smais" style="margin-top:0;">Consultar</button>
+                </div>
+            </form>
+            <div id="consulta-resultado"></div>
+
+            <hr style="border-top:1px solid rgba(255,255,255,0.15);margin:2.5rem 0;">
+
+            <h3><i class="fas fa-clock"></i> Turmas e Vagas Disponíveis</h3>
+            <div id="turmas-cards-grid" class="turmas-grid"></div>
+        </div>
+    </div>
+</section>
+
+<section class="footer">
+    <div class="credit">Behrend BJJ — Projeto Integrador CEUB (API REST <span>/api/v1</span>) | Gabriel Gonçalves, Gabriel Pereira e Edric</div>
+</section>
+
+<script src="./js/script.js"></script>
+</body>
+</html>

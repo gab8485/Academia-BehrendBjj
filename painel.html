@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Gestão (RBAC) — Behrend BJJ</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="header">
+    <section class="flex">
+        <a href="index.html" class="logo">
+            <img src="./img/logoacademia1.png" alt="Logo Behrend BJJ">
+        </a>
+
+        <nav class="navbar">
+            <a href="index.html">Home</a>
+            <a href="sobre.html">Sobre</a>
+            <li class="dropdown">
+                <a href="index.html#menu">Modalidades</a>
+                <div class="dropdown-menu">
+                    <a href="jiujitsuadulto.html">Jiu Jitsu Adulto</a>
+                    <a href="jiujitsuinfantil.html">Jiu Jitsu Infantil</a>
+                    <a href="judoadulto.html">Judo Adulto</a>
+                    <a href="judoinfantil.html">Judo Infantil</a>
+                    <a href="muaythay.html">Muay Thay</a>
+                </div>
+            </li>
+            <a href="horarios.html">Horários</a>
+            <a href="index.html#review">Unidades</a>
+            <a href="endereço.html">Endereço</a>
+            <a href="agendamento.html">Agende sua aula experimental</a>
+            <a href="painel.html">Painel</a>
+        </nav>
+
+        <div>
+            <a href="agendamento.html" class="btn1">Começar agora</a>
+        </div>
+
+        <div class="icons">
+            <div class="fas fa-bars" id="menu-btn"></div>
+        </div>
+    </section>
+</header>
+
+<section class="app-section" style="padding-top: 12rem;">
+    <h1 class="heading">Painel de Gestão <span>RBAC</span></h1>
+    <p class="section-subtitle">
+        Controle de Acesso Baseado em Papéis (EP3 / Segurança OWASP A01) — Admin, Instrutor e Aluno.
+    </p>
+
+    <!-- Card de Login e Seleção Rápida de Papel para Demonstração -->
+    <div class="app-card" style="max-width:750px;margin:0 auto 3rem auto;">
+        <h3><i class="fas fa-lock"></i> Autenticação (/api/v1/auth/login)</h3>
+        <p style="font-size:1.4rem;color:#ccc;margin-bottom:1.5rem;">
+            Para facilitar a validação e o Demo Day, clique em um dos perfis abaixo para preencher as credenciais e testar as permissões de cada papel:
+        </p>
+
+        <div class="demo-roles-bar">
+            <button type="button" id="btn-demo-admin" class="btn-role role-admin">
+                <i class="fas fa-crown"></i> Preencher Admin (Acesso Total)
+            </button>
+            <button type="button" id="btn-demo-instrutor" class="btn-role role-instrutor">
+                <i class="fas fa-user-check"></i> Preencher Instrutor (Operacional)
+            </button>
+            <button type="button" id="btn-demo-aluno" class="btn-role role-aluno">
+                <i class="fas fa-user-lock"></i> Preencher Aluno (Teste 403 Forbidden)
+            </button>
+        </div>
+
+        <form id="form-login-rbac" class="app-form">
+            <div class="form-row-2">
+                <div>
+                    <label for="login-email">E-mail Corporativo</label>
+                <input type="email" id="login-email" placeholder="Digite seu e-mail" required>
+                </div>
+                <div>
+                    <label for="login-senha">Senha</label>
+     <input type="password" id="login-senha" placeholder="Digite sua senha" required>
+                </div>
+            </div>
+            <button type="submit" class="btn-smais" style="width:100%;margin-top:1rem;">
+                Entrar e Obter Token Bearer
+            </button>
+            <p id="login-feedback" style="margin-top:1rem;font-size:1.5rem;"></p>
+        </form>
+
+        <div id="painel-user-banner" class="user-banner" style="display:none;">
+            <div>
+                Logado como: <strong id="logged-user-name"></strong>
+                <span id="logged-user-role" class="role-badge"></span>
+            </div>
+            <button type="button" id="btn-logout" class="btn-mini btn-cancel">Sair</button>
+        </div>
+        <form id="form-minha-conta" class="app-form" hidden>
+    <h3>Minha conta</h3>
+
+    <label for="conta-senha-atual">Senha atual</label>
+    <input id="conta-senha-atual" type="password"
+           autocomplete="current-password" required>
+
+    <label for="conta-email">Novo e-mail (opcional)</label>
+    <input id="conta-email" type="email" autocomplete="email">
+
+    <label for="conta-senha-nova">Nova senha (opcional, mínimo de 12 caracteres)</label>
+    <input id="conta-senha-nova" type="password"
+           autocomplete="new-password" minlength="12" maxlength="256">
+
+    <button type="submit" class="btn-smais">Salvar alterações</button>
+</form>
+<p id="conta-feedback" role="status"></p>
+    </div>
+<form id="form-minha-conta" class="app-card app-form" hidden>
+    <h3>Minha conta</h3>
+
+    <label for="conta-senha-atual">Senha atual</label>
+    <input id="conta-senha-atual" type="password"
+           autocomplete="current-password" maxlength="256" required>
+
+    <label for="conta-email">Novo e-mail (opcional)</label>
+    <input id="conta-email" type="email" autocomplete="email">
+
+    <label for="conta-senha-nova">Nova senha (opcional, mínimo de 12 caracteres)</label>
+    <input id="conta-senha-nova" type="password"
+           autocomplete="new-password" minlength="12" maxlength="256">
+
+    <button type="submit" class="btn-smais">Salvar alterações</button>
+</form>
+<p id="conta-feedback" role="status"></p>
+    <!-- Área Restrita do Dashboard -->
+    <div id="painel-dashboard" style="display:none;">
+        <div id="rbac-role-notice" style="display:none;margin-bottom:2rem;"></div>
+
+        <!-- KPIs -->
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <span class="kpi-number" id="kpi-agendamentos">0</span>
+                <span class="kpi-label">Total de Agendamentos</span>
+            </div>
+            <div class="kpi-card">
+                <span class="kpi-number" id="kpi-pendentes">0</span>
+                <span class="kpi-label">Aguardando Confirmação</span>
+            </div>
+            <div class="kpi-card">
+                <span class="kpi-number" id="kpi-contatos">0</span>
+                <span class="kpi-label">Mensagens de Contato</span>
+            </div>
+        </div>
+
+        <!-- Tabela de Agendamentos Experimentais -->
+        <div class="app-card" style="margin-bottom:3rem;">
+            <h3><i class="fas fa-calendar-alt"></i> Gestão de Aulas Experimentais</h3>
+            <div class="table-responsive">
+                <table class="app-table">
+                    <thead>
+                        <tr>
+                            <th>Protocolo</th>
+                            <th>Aluno / Contato</th>
+                            <th>Modalidade</th>
+                            <th>Data</th>
+                            <th>Status</th>
+                            <th>Ações (RBAC)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabela-agendamentos-body"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Tabela de Mensagens de Contato -->
+        <div class="app-card" style="margin-bottom:3rem;">
+            <h3><i class="fas fa-envelope-open-text"></i> Mensagens do Formulário Institucional</h3>
+            <div class="table-responsive">
+                <table class="app-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Visitante</th>
+                            <th>Mensagem</th>
+                            <th>Situação</th>
+                            <th>Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabela-contatos-body"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Seção Exclusiva de Admin: Criar Nova Turma -->
+        <div id="admin-only-section" class="app-card">
+            <h3><i class="fas fa-plus-circle"></i> Cadastrar Nova Turma (Exclusivo Papel <code>admin</code>)</h3>
+            <form id="form-nova-turma" class="app-form">
+                <div class="form-row-2">
+                    <div>
+                        <label for="nt-modalidade">Modalidade</label>
+                        <input type="text" id="nt-modalidade" placeholder="Ex: Defesa Pessoal Feminina" required>
+                    </div>
+                    <div>
+                        <label for="nt-publico">Público</label>
+                        <input type="text" id="nt-publico" placeholder="Ex: Adulto" required>
+                    </div>
+                </div>
+                <div class="form-row-2">
+                    <div>
+                        <label for="nt-dias">Dias da Semana</label>
+                        <input type="text" id="nt-dias" placeholder="Ex: Terça e Quinta" required>
+                    </div>
+                    <div>
+                        <label for="nt-horario">Horário</label>
+                        <input type="text" id="nt-horario" placeholder="Ex: 20:00 - 21:00" required>
+                    </div>
+                </div>
+                <div class="form-row-2">
+                    <div>
+                        <label for="nt-instrutor">Instrutor Responsável</label>
+                        <input type="text" id="nt-instrutor" placeholder="Ex: Mestre Erick Behrend" required>
+                    </div>
+                    <div>
+                        <label for="nt-capacidade">Capacidade Máxima</label>
+                        <input type="number" id="nt-capacidade" value="20" min="1" max="100" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn-smais">Salvar Nova Turma</button>
+                <p id="turma-admin-feedback" style="margin-top:1rem;font-size:1.5rem;"></p>
+            </form>
+        </div>
+    </div>
+</section>
+
+<section class="footer">
+    <div class="credit">Behrend BJJ — Painel RBAC integrado à API <span>/api/v1</span> | Documentação Swagger em <a href="/docs" style="color:#60a5fa;">/docs</a></div>
+</section>
+
+<script src="./js/script.js"></script>
+</body>
+</html>
