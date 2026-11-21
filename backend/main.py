@@ -64,6 +64,12 @@ app = FastAPI(
     version="1.0.0",
     lifespan=lifespan,
 )
+@app.get("/manifest.webmanifest", include_in_schema=False)
+def manifesto_app():
+    return FileResponse(
+        PROJECT_ROOT / "manifest.webmanifest",
+        media_type="application/manifest+json",
+    )
 
 app.add_middleware(
     CORSMiddleware,
