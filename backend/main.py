@@ -352,7 +352,7 @@ def serve_static_pages(filename: str):
         "jiujitsuinfantil.html",
         "judoadulto.html",
         "judoinfantil.html",
-        "muaythay.html",
+        "nogi.html",
         "agendamento.html",
         "painel.html",
         "style.css",
