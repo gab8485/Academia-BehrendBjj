@@ -38,7 +38,7 @@ html::-webkit-scrollbar-thumb{
 }
 
 body{
-    background:linear-gradient(black,rgb(32, 2, 2),black)
+background: #0d0f16;
 }
 
 section{
@@ -1641,5 +1641,231 @@ nav li a{
         background: #242438;
         border-radius: 8px;
         box-shadow: none;
+    }
+}
+.grade-aulas {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 14rem 2rem 4rem;
+    color: #fff;
+}
+
+.grade-aulas h1 {
+    font-size: clamp(3rem, 6vw, 5rem);
+    line-height: 1.1;
+    margin-bottom: 1rem;
+}
+
+.grade-aulas p,
+.grade-aulas dd {
+    color: #d1d5e3;
+    font-size: 1.6rem;
+    line-height: 1.55;
+}
+
+.grade-aulas-turmas {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr));
+    gap: 2rem;
+    margin-top: 2.4rem;
+}
+
+.grade-aulas-card {
+    background: #15151f;
+    border: 1px solid #303044;
+    border-radius: 14px;
+    padding: clamp(1.6rem, 4vw, 2.8rem);
+}
+
+.grade-aulas-card h2 {
+    color: #93c5fd;
+    font-size: 2.4rem;
+}
+
+.grade-aulas-card dt {
+    margin-top: 1.6rem;
+    padding-top: 1.4rem;
+    border-top: 1px solid #303044;
+    font-size: 1.7rem;
+    font-weight: 700;
+}
+
+.grade-aulas-card dd {
+    margin: 0.5rem 0 0;
+}
+.foto-inicio-mobile {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .home-container {
+        padding-top: 9.5rem;
+        background: #0b0b0f;
+    }
+
+    .foto-inicio-mobile {
+        display: block;
+        width: 100%;
+        height: auto;
+    }
+
+    .home-container .home {
+        min-height: 0;
+        padding: 1.6rem 1.5rem 2rem;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .home .content .titulo-academia span {
+        color: #fff;
+    }
+}
+@media (max-width: 768px) {
+    .home-container .home#home {
+        height: auto;
+        min-height: 0;
+        padding: 1.2rem 1.5rem 1.8rem;
+    }
+
+    .home-container .home#home .content {
+        margin-top: 0;
+        padding-top: 0;
+    }
+
+    .home-container .home#home .titulo-academia {
+        margin-top: 0;
+    }
+}
+.menu .box-container .box.card-infantil,
+.menu .box-container .box.card-infantil:hover {
+    background: linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.65)),
+                url("./img/bjjinf2.jpeg") center / cover no-repeat;
+                display: flex;
+flex-direction: column;
+justify-content: flex-end;
+align-items: center;
+gap: 10px;
+min-height: 0;
+height: auto;
+aspect-ratio: 4 / 3;
+align-self: start;
+padding: 16px;
+box-sizing: border-box;
+background-color: #15151f;
+}
+
+.menu .box-container .box.card-infantil .price {
+    color: #fff;
+}
+.menu .box-container .box.card-adulto,
+.menu .box-container .box.card-adulto:hover {
+    background: #15151f url("./img/bjj1.jpeg") center top / contain no-repeat;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+    min-height: 0;
+height: auto;
+aspect-ratio: 4 / 3;
+align-self: start;
+    padding: 16px;
+    box-sizing: border-box;
+}
+
+.menu .box-container .box.card-adulto .price {
+    color: #fff;
+}
+.menu .box-container .box.card-nogi,
+.menu .box-container .box.card-nogi:hover {
+     background: #15151f url("./img/bjj3.jpeg") center top / contain no-repeat;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+    min-height: 0;
+height: auto;
+aspect-ratio: 4 / 3;
+align-self: start;
+    padding: 16px;
+    box-sizing: border-box;
+}
+
+
+.menu .box-container .box.card-nogi .price {
+    color: #fff;
+}
+@media (max-width: 768px) {
+    video.video-sobre {
+        display: block;
+        width: 100%;
+        height: auto;
+    }
+}
+.foto-sobre-mobile {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .capa-sobre {
+        display: block;
+        height: auto;
+        min-height: 0;
+        padding: 0;
+        background: #0d0f16;
+    }
+
+    .capa-sobre .foto-sobre-mobile {
+        display: block;
+        width: 100%;
+        height: auto;
+    }
+
+    .capa-sobre .heading {
+        margin: 0;
+        padding: 1.2rem 1rem;
+    }
+}
+@media (max-width: 768px) {
+    .homesobre-container {
+        background-size: contain;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+
+    .homesobre-container .homesobre {
+        width: 100%;
+        height: auto;
+        min-height: 0;
+        aspect-ratio: 4 / 3;
+        justify-content: center;
+    }
+}
+@media (max-width: 768px) {
+    .capa-jiu-mobile {
+        width: 100%;
+        max-width: none;
+        margin-inline: auto;
+        margin-top: 220px;
+        box-sizing: border-box;
+        background-position: center center;
+        background-size: contain;
+        background-repeat: no-repeat;
+    }
+
+    .capa-jiu-mobile > section {
+        display: flex;
+        width: 100%;
+        max-width: none;
+        height: auto;
+        min-height: 0;
+        aspect-ratio: 16 / 9;
+        margin: 0;
+        padding: 1rem;
+        box-sizing: border-box;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
     }
 }
