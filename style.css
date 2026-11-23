@@ -2002,7 +2002,7 @@ align-self: start;
     font-size: 1.5rem;
 }
 
-#mostrar-senha-aluno {
+.alternar-senha {
     display: inline-flex;
     align-items: center;
     gap: 0.6rem;
@@ -2011,7 +2011,7 @@ align-self: start;
     background: #25334d;
 }
 
-#mostrar-senha-aluno:focus-visible {
+.alternar-senha:focus-visible {
     outline: 2px solid white;
     outline-offset: 2px;
 }

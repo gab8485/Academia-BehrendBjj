@@ -101,6 +101,13 @@
     <label for="conta-senha-atual">Senha atual</label>
     <input id="conta-senha-atual" type="password"
            autocomplete="current-password" required>
+    <button class="btn-mini alternar-senha" data-alternar-senha type="button" aria-controls="conta-senha-atual">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7Z"/>
+            <circle cx="12" cy="12" r="3"/>
+        </svg>
+        <span>Mostrar senha</span>
+    </button>
 
     <label for="conta-email">Novo e-mail (opcional)</label>
     <input id="conta-email" type="email" autocomplete="email">
@@ -108,28 +115,18 @@
     <label for="conta-senha-nova">Nova senha (opcional, mínimo de 12 caracteres)</label>
     <input id="conta-senha-nova" type="password"
            autocomplete="new-password" minlength="12" maxlength="256">
+    <button class="btn-mini alternar-senha" data-alternar-senha type="button" aria-controls="conta-senha-nova">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7Z"/>
+            <circle cx="12" cy="12" r="3"/>
+        </svg>
+        <span>Mostrar senha</span>
+    </button>
 
     <button type="submit" class="btn-smais">Salvar alterações</button>
 </form>
 <p id="conta-feedback" role="status"></p>
     </div>
-<form id="form-minha-conta" class="app-card app-form" hidden>
-    <h3>Minha conta</h3>
-
-    <label for="conta-senha-atual">Senha atual</label>
-    <input id="conta-senha-atual" type="password"
-           autocomplete="current-password" maxlength="256" required>
-
-    <label for="conta-email">Novo e-mail (opcional)</label>
-    <input id="conta-email" type="email" autocomplete="email">
-
-    <label for="conta-senha-nova">Nova senha (opcional, mínimo de 12 caracteres)</label>
-    <input id="conta-senha-nova" type="password"
-           autocomplete="new-password" minlength="12" maxlength="256">
-
-    <button type="submit" class="btn-smais">Salvar alterações</button>
-</form>
-<p id="conta-feedback" role="status"></p>
     <!-- Área Restrita do Dashboard -->
     <div id="painel-dashboard" style="display:none;">
         <details id="gestao-confirmacoes" class="app-card">
@@ -148,6 +145,13 @@
                 <input id="cadastro-aluno-email" name="email" type="email" maxlength="150" required>
                 <label for="cadastro-aluno-senha">Senha inicial</label>
                 <input id="cadastro-aluno-senha" name="senha" type="password" minlength="12" maxlength="128" autocomplete="new-password" required>
+                <button class="btn-mini alternar-senha" data-alternar-senha type="button" aria-controls="cadastro-aluno-senha">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7Z"/>
+                        <circle cx="12" cy="12" r="3"/>
+                    </svg>
+                    <span>Mostrar senha</span>
+                </button>
                 <button type="submit" class="btn-smais">Criar conta de aluno</button>
                 <p id="cadastro-aluno-feedback" role="status"></p>
             </form>
