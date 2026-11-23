@@ -65,6 +65,25 @@ function iniciarConfirmacaoAluno() {
             estado.setAttribute("role", "status");
             estado.textContent = textoResposta(aula.resposta);
             const botoes = [];
+            const colegas = document.createElement("details");
+            const resumo = document.createElement("summary");
+            resumo.textContent = "Quem vai à aula?";
+            const confirmados = document.createElement("p");
+            confirmados.setAttribute("role", "status");
+            colegas.append(resumo, confirmados);
+
+            colegas.addEventListener("toggle", async () => {
+                if (!colegas.open) return;
+                confirmados.textContent = "Carregando confirmações…";
+                try {
+                    const nomes = await apiPresencas(`/minhas-aulas/${aula.id}/colegas`, {}, tokenAluno);
+                    confirmados.textContent = nomes.length
+                        ? nomes.join(" · ")
+                        : "Nenhum colega confirmou presença ainda.";
+                } catch (erro) {
+                    confirmados.textContent = erro.message;
+                }
+            });
 
             cartao.append(titulo, estado);
             for (const resposta of ["vou", "nao_vou"]) {
@@ -98,6 +117,7 @@ function iniciarConfirmacaoAluno() {
                 });
                 cartao.append(botao);
             }
+            cartao.append(colegas);
             lista.append(cartao);
         }
         formulario.hidden = true;

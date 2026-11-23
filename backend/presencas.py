@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 from typing import Literal
 from zoneinfo import ZoneInfo
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Response
 from pydantic import BaseModel, EmailStr, Field
 from sqlalchemy import Column, ForeignKey, Integer, String
 from sqlalchemy.dialects.sqlite import insert
@@ -89,6 +89,29 @@ def listar_minhas_aulas(
         )
     }
     return [{**aula, "resposta": respostas.get(chave)} for chave, aula in aulas.items()]
+
+
+@router.get("/minhas-aulas/{aula_id}/colegas")
+def listar_colegas_confirmados(
+    aula_id: str,
+    response: Response,
+    aluno: User = Depends(require_roles("aluno")),
+    db: Session = Depends(get_db),
+):
+    aula = aulas_da_grade().get(aula_id)
+    if not aula or not aula["aberta"]:
+        raise HTTPException(404, "Aula indisponível para consulta.")
+
+    colegas = db.query(User.nome).join(
+        ConfirmacaoAula, ConfirmacaoAula.aluno_id == User.id,
+    ).filter(
+        ConfirmacaoAula.aula_id == aula_id,
+        ConfirmacaoAula.resposta == "vou",
+        User.papel == "aluno",
+        User.id != aluno.id,
+    ).order_by(User.nome, User.id)
+    response.headers["Cache-Control"] = "no-store"
+    return [nome.strip().partition(" ")[0] for (nome,) in colegas]
 
 
 @router.put("/minhas-aulas/{aula_id}")
