@@ -131,6 +131,24 @@
 <p id="conta-feedback" role="status"></p>
     <!-- Área Restrita do Dashboard -->
     <div id="painel-dashboard" style="display:none;">
+        <details id="gestao-confirmacoes" class="app-card">
+            <summary>Confirmações de aulas</summary>
+            <label for="aula-gestao">Escolha uma aula</label>
+            <select id="aula-gestao"><option value="">Selecione uma aula</option></select>
+            <ul id="lista-confirmacoes" aria-live="polite"></ul>
+            <form id="cadastro-aluno" class="app-form" hidden>
+                <h3>Cadastrar aluno</h3>
+                <label for="cadastro-aluno-nome">Nome</label>
+                <input id="cadastro-aluno-nome" name="nome" maxlength="120" required>
+                <label for="cadastro-aluno-email">E-mail</label>
+                <input id="cadastro-aluno-email" name="email" type="email" maxlength="150" required>
+                <label for="cadastro-aluno-senha">Senha inicial</label>
+                <input id="cadastro-aluno-senha" name="senha" type="password" minlength="12" maxlength="128" autocomplete="new-password" required>
+                <button type="submit" class="btn-smais">Criar conta de aluno</button>
+                <p id="cadastro-aluno-feedback" role="status"></p>
+            </form>
+        </details>
+
         <div id="rbac-role-notice" style="display:none;margin-bottom:2rem;"></div>
 
         <!-- KPIs -->
@@ -234,5 +252,6 @@
 </section>
 
 <script src="./js/script.js"></script>
+<script src="./js/presencas.js"></script>
 </body>
 </html>

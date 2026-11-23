@@ -378,6 +378,13 @@ if (btnDemoAluno) btnDemoAluno.onclick = focarCampoEmail;
             if (!resp.ok) {
                 throw new Error(body.detail || "Falha na autenticação.");
             }
+            if (body.usuario.papel === "aluno") {
+                sessionStorage.removeItem("behrend_token");
+                sessionStorage.removeItem("behrend_user");
+                sessionStorage.setItem("behrend_token_aluno", body.access_token);
+                window.location.assign("/confirmar-aula.html");
+                return;
+            }
             sessionStorage.setItem("behrend_token", body.access_token);
             sessionStorage.setItem("behrend_user", JSON.stringify(body.usuario));
             msg.textContent = "";
@@ -445,6 +452,14 @@ if (formMinhaConta) formMinhaConta.hidden = !token || !userStr;
     }
 
     const user = JSON.parse(userStr);
+    if (user.papel === "aluno") {
+        sessionStorage.removeItem("behrend_token");
+        sessionStorage.removeItem("behrend_user");
+        sessionStorage.setItem("behrend_token_aluno", token);
+        window.location.assign("/confirmar-aula.html");
+        return;
+    }
+    document.getElementById("cadastro-aluno").hidden = user.papel !== "admin";
     dashboardArea.style.display = "block";
     userBanner.style.display = "flex";
     document.getElementById("logged-user-name").textContent = user.nome;
