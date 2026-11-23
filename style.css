@@ -1931,3 +1931,17 @@ align-self: start;
     text-transform: none;
     overflow-wrap: anywhere;
 }
+
+#lista-confirmacoes {
+    font-size: 1.6rem;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+#lista-confirmacoes:not(:empty) {
+    margin: 0.8rem 0 1.2rem;
+}
+
+#lista-confirmacoes li {
+    margin-inline-start: 1.5em;
+}
