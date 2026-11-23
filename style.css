@@ -1945,3 +1945,31 @@ align-self: start;
 #lista-confirmacoes li {
     margin-inline-start: 1.5em;
 }
+
+.capa-jiu-mobile > section {
+    width: 100%;
+    justify-content: center;
+}
+
+.capa-jiu-mobile .content {
+    min-width: 0;
+    text-align: center;
+}
+
+.capa-jiu-mobile .content .titulo-modalidade {
+    display: inline-block;
+    max-width: 100%;
+    margin: 0;
+    padding: 0.3em 0.58em;
+    border: 1px solid #ffffff40;
+    border-radius: 6px;
+    background: #10121ae6;
+    color: #fff;
+    font-family: "Roboto", system-ui, sans-serif;
+    font-size: clamp(2.8rem, 6vw, 6.4rem);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: 0.01em;
+    text-transform: none;
+    text-wrap: balance;
+}
