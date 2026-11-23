@@ -7,9 +7,9 @@
  * 4. Painel de Gestão com Controle de Acesso por Papel - RBAC (/api/v1/auth/login)
  */
 
-const API_BASE = window.location.origin === "http://127.0.0.1:5501"
-    ? "http://127.0.0.1:8001/api/v1"
-    : "/api/v1";
+const { hostname, port } = window.location;
+const servidorLocal = ["localhost", "127.0.0.1"].includes(hostname) && ["5500", "5501"].includes(port);
+const API_BASE = servidorLocal ? `http://${hostname}:8000/api/v1` : "/api/v1";
 
 // Turmas padrão de fallback caso a página seja aberta via arquivo estático (Live Server) sem o FastAPI
 const FALLBACK_TURMAS = [
