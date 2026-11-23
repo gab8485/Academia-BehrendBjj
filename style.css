@@ -1903,3 +1903,31 @@ align-self: start;
     max-width: 100%;
     margin: 0.8rem;
 }
+
+.aula-confirmados {
+    margin-top: 0.8rem;
+    font-size: 1.6rem;
+}
+
+.aula-confirmados summary {
+    box-sizing: border-box;
+    min-height: 44px;
+    padding: 10px 12px;
+    border: 1px solid #405477;
+    border-radius: 6px;
+    color: #d5e5ff;
+    background: #1b263a;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.aula-confirmados summary:focus-visible {
+    outline: 2px solid #a9c9ff;
+    outline-offset: 2px;
+}
+
+.aula-confirmados p {
+    margin: 0.8rem 0 0;
+    text-transform: none;
+    overflow-wrap: anywhere;
+}

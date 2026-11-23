@@ -108,10 +108,9 @@ def listar_colegas_confirmados(
         ConfirmacaoAula.aula_id == aula_id,
         ConfirmacaoAula.resposta == "vou",
         User.papel == "aluno",
-        User.id != aluno.id,
     ).order_by(User.nome, User.id)
     response.headers["Cache-Control"] = "no-store"
-    return [nome.strip().partition(" ")[0] for (nome,) in colegas]
+    return [nome.strip() for (nome,) in colegas]
 
 
 @router.put("/minhas-aulas/{aula_id}")

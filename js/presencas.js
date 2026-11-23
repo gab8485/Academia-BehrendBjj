@@ -66,24 +66,29 @@ function iniciarConfirmacaoAluno() {
             estado.textContent = textoResposta(aula.resposta);
             const botoes = [];
             const colegas = document.createElement("details");
+            colegas.className = "aula-confirmados";
             const resumo = document.createElement("summary");
             resumo.textContent = "Quem vai à aula?";
             const confirmados = document.createElement("p");
             confirmados.setAttribute("role", "status");
             colegas.append(resumo, confirmados);
 
-            colegas.addEventListener("toggle", async () => {
+            let consulta = 0;
+            async function carregarConfirmados() {
                 if (!colegas.open) return;
+                const atual = ++consulta;
                 confirmados.textContent = "Carregando confirmações…";
                 try {
                     const nomes = await apiPresencas(`/minhas-aulas/${aula.id}/colegas`, {}, tokenAluno);
+                    if (consulta !== atual) return;
                     confirmados.textContent = nomes.length
                         ? nomes.join(" · ")
-                        : "Nenhum colega confirmou presença ainda.";
+                        : "Ninguém confirmou presença ainda.";
                 } catch (erro) {
-                    confirmados.textContent = erro.message;
+                    if (consulta === atual) confirmados.textContent = erro.message;
                 }
-            });
+            }
+            colegas.addEventListener("toggle", carregarConfirmados);
 
             cartao.append(titulo, estado);
             for (const resposta of ["vou", "nao_vou"]) {
@@ -100,6 +105,7 @@ function iniciarConfirmacaoAluno() {
                         await apiPresencas(`/minhas-aulas/${aula.id}`, {
                             method: "PUT", body: JSON.stringify({ resposta })
                         }, sessao);
+                        void carregarConfirmados();
                         estado.textContent = `Resposta salva: ${textoResposta(resposta)}`;
                         for (const [item, valor] of botoes) {
                             item.setAttribute("aria-pressed", String(valor === resposta));
