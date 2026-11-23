@@ -37,14 +37,6 @@ function iniciarConfirmacaoAluno() {
     const formulario = document.getElementById("login-aluno");
     if (!formulario) return;
 
-    const senha = document.getElementById("aluno-senha");
-    const mostrarSenha = document.getElementById("mostrar-senha-aluno");
-    mostrarSenha.addEventListener("click", () => {
-        const mostrar = senha.type === "password";
-        senha.type = mostrar ? "text" : "password";
-        mostrarSenha.querySelector("span").textContent = mostrar ? "Ocultar senha" : "Mostrar senha";
-    });
-
     const area = document.getElementById("area-minhas-aulas");
     const lista = document.getElementById("lista-minhas-aulas");
     const feedback = document.getElementById("feedback-aulas");
@@ -155,7 +147,6 @@ function iniciarConfirmacaoAluno() {
             await carregar();
             sessionStorage.setItem("behrend_token_aluno", tokenAluno);
             formulario.reset();
-            if (senha.type === "text") mostrarSenha.click();
         } catch (erro) {
             sair();
             feedback.textContent = erro.message;
@@ -285,6 +276,18 @@ function iniciarGestaoAulas() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+    for (const botao of document.querySelectorAll("[data-alternar-senha]")) {
+        const campo = document.getElementById(botao.getAttribute("aria-controls"));
+        const rotulo = botao.querySelector("span");
+
+        function mostrarSenha(mostrar) {
+            campo.type = mostrar ? "text" : "password";
+            rotulo.textContent = mostrar ? "Ocultar senha" : "Mostrar senha";
+        }
+
+        botao.addEventListener("click", () => mostrarSenha(campo.type === "password"));
+        campo.form.addEventListener("reset", () => mostrarSenha(false));
+    }
     iniciarConfirmacaoAluno();
     iniciarGestaoAulas();
 });
