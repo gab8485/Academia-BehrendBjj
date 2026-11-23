@@ -70,16 +70,15 @@ def sincronizar_turmas_experimentais(db: Session) -> None:
     antigas = {
         ("Jiu-Jitsu Adulto", "Segunda a Sexta", "19:30 - 21:00"),
         ("Jiu-Jitsu Infantil", "Terça e Quinta", "18:00 - 19:00"),
-        ("Judô Adulto", "Segunda, Quarta e Sexta", "20:00 - 21:00"),
-        ("Judô Infantil", "Terça e Quinta", "17:30 - 18:30"),
         ("Muay Thai", "Terça, Quinta e Sábado", "19:00 - 20:00"),
         ("Submission / No-Gi", "Quarta e Sexta", "21:00 - 22:00"),
     }
+    modalidades_encerradas = {"judô adulto", "judô infantil", "judo adulto", "judo infantil"}
     existentes = set()
     for turma in TurmaRepository.list_all(db, apenas_ativas=False):
         chave = (turma.modalidade, turma.dias_semana, turma.horario)
         existentes.add(chave)
-        if chave in antigas:
+        if chave in antigas or turma.modalidade.strip().casefold() in modalidades_encerradas:
             turma.ativa = False
 
     for modalidade, dias, hora in sorted(turmas_da_grade().keys() - existentes):
