@@ -1946,19 +1946,23 @@ align-self: start;
     margin-inline-start: 1.5em;
 }
 
-.capa-jiu-mobile > section {
+.capa-jiu-mobile > section,
+.homesobre-container > .homesobre {
     width: 100%;
     align-items: flex-end;
     justify-content: center;
     padding-bottom: clamp(1.2rem, 4vw, 5rem);
 }
 
-.capa-jiu-mobile .content {
+.capa-jiu-mobile .content,
+.homesobre-container .content {
     min-width: 0;
     text-align: center;
 }
 
-.capa-jiu-mobile .content .titulo-modalidade {
+.capa-jiu-mobile .content .titulo-modalidade,
+.homesobre .content .titulo-modalidade,
+.contact > .titulo-endereco {
     display: inline-block;
     max-width: 100%;
     margin: 0;
@@ -1972,4 +1976,11 @@ align-self: start;
     letter-spacing: 0.01em;
     text-transform: none;
     text-wrap: balance;
+}
+
+.contact > .titulo-endereco {
+    display: block;
+    padding: 0 0 0.75em;
+    text-align: center;
+    font-size: clamp(2.8rem, 5vw, 4.4rem);
 }
