@@ -37,6 +37,14 @@ function iniciarConfirmacaoAluno() {
     const formulario = document.getElementById("login-aluno");
     if (!formulario) return;
 
+    const senha = document.getElementById("aluno-senha");
+    const mostrarSenha = document.getElementById("mostrar-senha-aluno");
+    mostrarSenha.addEventListener("click", () => {
+        const mostrar = senha.type === "password";
+        senha.type = mostrar ? "text" : "password";
+        mostrarSenha.querySelector("span").textContent = mostrar ? "Ocultar senha" : "Mostrar senha";
+    });
+
     const area = document.getElementById("area-minhas-aulas");
     const lista = document.getElementById("lista-minhas-aulas");
     const feedback = document.getElementById("feedback-aulas");
@@ -133,7 +141,7 @@ function iniciarConfirmacaoAluno() {
     document.getElementById("sair-aulas").addEventListener("click", sair);
     formulario.addEventListener("submit", async (evento) => {
         evento.preventDefault();
-        const botao = formulario.querySelector("button");
+        const botao = formulario.querySelector('[type="submit"]');
         botao.disabled = true;
         feedback.textContent = "";
         try {
@@ -147,6 +155,7 @@ function iniciarConfirmacaoAluno() {
             await carregar();
             sessionStorage.setItem("behrend_token_aluno", tokenAluno);
             formulario.reset();
+            if (senha.type === "text") mostrarSenha.click();
         } catch (erro) {
             sair();
             feedback.textContent = erro.message;
@@ -167,6 +176,63 @@ function iniciarGestaoAulas() {
     const selecao = document.getElementById("aula-gestao");
     const lista = document.getElementById("lista-confirmacoes");
     const cadastro = document.getElementById("cadastro-aluno");
+    const gestao = document.getElementById("gestao-alunos");
+    const formularioAluno = document.getElementById("administrar-aluno");
+    const aluno = document.getElementById("aluno-cadastrado");
+    const novaSenha = document.getElementById("aluno-nova-senha");
+    const excluir = document.getElementById("excluir-aluno");
+    const feedbackAlunos = document.getElementById("gestao-alunos-feedback");
+
+    async function carregarAlunos() {
+        aluno.replaceChildren(new Option("Selecione um aluno", ""));
+        excluir.disabled = true;
+        try {
+            const alunos = await apiPresencas("/gestao/alunos");
+            for (const item of alunos) aluno.add(new Option(`${item.nome} · ${item.email}`, item.id));
+            if (!alunos.length) feedbackAlunos.textContent = "Nenhum aluno ativo cadastrado.";
+        } catch (erro) {
+            feedbackAlunos.textContent = erro.message;
+        }
+    }
+
+    gestao.addEventListener("toggle", () => {
+        if (gestao.open && !gestao.hidden) void carregarAlunos();
+    });
+    aluno.addEventListener("change", () => {
+        excluir.disabled = !aluno.value;
+        novaSenha.value = "";
+    });
+
+    formularioAluno.addEventListener("submit", async evento => {
+        evento.preventDefault();
+        const botao = formularioAluno.querySelector('[type="submit"]');
+        botao.disabled = true;
+        try {
+            const dados = await apiPresencas(`/gestao/alunos/${aluno.value}/senha`, {
+                method: "PATCH", body: JSON.stringify({ senha: novaSenha.value })
+            });
+            novaSenha.value = "";
+            feedbackAlunos.textContent = dados.mensagem;
+        } catch (erro) {
+            feedbackAlunos.textContent = erro.message;
+        } finally {
+            botao.disabled = false;
+        }
+    });
+
+    excluir.addEventListener("click", async () => {
+        if (!aluno.value || !window.confirm(`Remover o acesso de ${aluno.selectedOptions[0].text}?`)) return;
+        excluir.disabled = true;
+        try {
+            const dados = await apiPresencas(`/gestao/alunos/${aluno.value}`, { method: "DELETE" });
+            novaSenha.value = "";
+            await carregarAlunos();
+            feedbackAlunos.textContent = dados.mensagem;
+        } catch (erro) {
+            feedbackAlunos.textContent = erro.message;
+            excluir.disabled = !aluno.value;
+        }
+    });
 
     painel.addEventListener("toggle", async () => {
         if (!painel.open) return;
@@ -209,6 +275,7 @@ function iniciarGestaoAulas() {
             });
             cadastro.reset();
             feedback.textContent = dados.mensagem;
+            await carregarAlunos();
         } catch (erro) {
             feedback.textContent = erro.message;
         } finally {

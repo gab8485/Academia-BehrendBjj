@@ -1986,3 +1986,32 @@ align-self: start;
     text-align: center;
     font-size: clamp(2.8rem, 5vw, 4.4rem);
 }
+
+#gestao-alunos[hidden] {
+    display: none;
+}
+
+#gestao-alunos summary {
+    font-size: 1.8rem;
+    cursor: pointer;
+}
+
+#aluno-cadastrado {
+    max-width: 100%;
+    padding: 0.7em;
+    font-size: 1.5rem;
+}
+
+#mostrar-senha-aluno {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    min-height: 44px;
+    color: white;
+    background: #25334d;
+}
+
+#mostrar-senha-aluno:focus-visible {
+    outline: 2px solid white;
+    outline-offset: 2px;
+}
