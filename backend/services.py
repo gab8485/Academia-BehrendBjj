@@ -1,4 +1,5 @@
 """Camada de Serviço (Regras de Negócio): orquestra validações de domínio, agendamentos e seed."""
+import os
 import secrets
 from typing import List, Optional
 from fastapi import HTTPException, status
@@ -28,6 +29,18 @@ def seed_initial_data(db: Session) -> None:
         ("Instrutor Gabriel (Tatame)", "instrutor@behrendbjj.com", "Instrutor@2026", "instrutor"),
         ("Aluno Visitante", "aluno@behrendbjj.com", "Aluno@2026", "aluno"),
     ]
+    if db.get_bind().dialect.name == "postgresql":
+        # Em um banco externo novo, use apenas contas configuradas pelo proprietário.
+        default_users = []
+        for papel in ("admin", "instrutor"):
+            prefixo = f"BEHREND_{papel.upper()}"
+            email = os.getenv(f"{prefixo}_EMAIL", "").strip().lower()
+            senha = os.getenv(f"{prefixo}_PASSWORD", "")
+            if email or senha:
+                if not email or not 12 <= len(senha) <= 128:
+                    raise RuntimeError(f"Configure {prefixo}_EMAIL e {prefixo}_PASSWORD (12 a 128 caracteres).")
+                default_users.append((papel.capitalize(), email, senha, papel))
+
     for nome, email, senha, papel in default_users:
         if not UserRepository.get_by_email(db, email):
             UserRepository.create(
