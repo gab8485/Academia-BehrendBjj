@@ -5,7 +5,7 @@ from zoneinfo import ZoneInfo
 
 from fastapi import APIRouter, Depends, HTTPException, Response
 from pydantic import BaseModel, EmailStr, Field
-from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy import Column, ForeignKey, Integer, String, delete
 from sqlalchemy.dialects.postgresql import insert as postgresql_insert
 from sqlalchemy.dialects.sqlite import insert as sqlite_insert
 from sqlalchemy.exc import IntegrityError
@@ -27,7 +27,7 @@ class ConfirmacaoAula(Base):
 
 
 class RespostaAula(BaseModel):
-    resposta: Literal["vou", "nao_vou"]
+    resposta: Literal["vou", "nao_vou"] | None
 
 
 class CadastroAluno(BaseModel):
@@ -104,14 +104,20 @@ def confirmar_aula(
     if not aula or not aula["aberta"]:
         raise HTTPException(404, "Aula indisponível para confirmação.")
 
-    insert = postgresql_insert if db.get_bind().dialect.name == "postgresql" else sqlite_insert
-    comando = insert(ConfirmacaoAula).values(
-        aula_id=aula_id, aluno_id=aluno.id, resposta=dados.resposta,
-    )
-    db.execute(comando.on_conflict_do_update(
-        index_elements=["aula_id", "aluno_id"],
-        set_={"resposta": comando.excluded.resposta},
-    ))
+    if dados.resposta is None:
+        db.execute(delete(ConfirmacaoAula).where(
+            ConfirmacaoAula.aula_id == aula_id,
+            ConfirmacaoAula.aluno_id == aluno.id,
+        ))
+    else:
+        insert = postgresql_insert if db.get_bind().dialect.name == "postgresql" else sqlite_insert
+        comando = insert(ConfirmacaoAula).values(
+            aula_id=aula_id, aluno_id=aluno.id, resposta=dados.resposta,
+        )
+        db.execute(comando.on_conflict_do_update(
+            index_elements=["aula_id", "aluno_id"],
+            set_={"resposta": comando.excluded.resposta},
+        ))
     db.commit()
     return {"resposta": dados.resposta}
 
