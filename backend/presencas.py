@@ -6,7 +6,8 @@ from zoneinfo import ZoneInfo
 from fastapi import APIRouter, Depends, HTTPException, Response
 from pydantic import BaseModel, EmailStr, Field
 from sqlalchemy import Column, ForeignKey, Integer, String
-from sqlalchemy.dialects.sqlite import insert
+from sqlalchemy.dialects.postgresql import insert as postgresql_insert
+from sqlalchemy.dialects.sqlite import insert as sqlite_insert
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
@@ -125,6 +126,7 @@ def confirmar_aula(
     if not aula or not aula["aberta"]:
         raise HTTPException(404, "Aula indisponível para confirmação.")
 
+    insert = postgresql_insert if db.get_bind().dialect.name == "postgresql" else sqlite_insert
     comando = insert(ConfirmacaoAula).values(
         aula_id=aula_id, aluno_id=aluno.id, resposta=dados.resposta,
     )

@@ -10,3 +10,5 @@ email-validator
 email-validator
 
 tzdata; sys_platform == "win32"
+
+psycopg[binary]==3.2.13
