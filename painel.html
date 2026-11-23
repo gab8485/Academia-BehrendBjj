@@ -137,6 +137,9 @@
             <label for="aula-gestao">Escolha uma aula</label>
             <select id="aula-gestao"><option value="">Selecione uma aula</option></select>
             <ul id="lista-confirmacoes" aria-live="polite"></ul>
+        </details>
+        <details id="gestao-alunos" class="app-card" hidden>
+            <summary>Alunos cadastrados</summary>
             <form id="cadastro-aluno" class="app-form" hidden>
                 <h3>Cadastrar aluno</h3>
                 <label for="cadastro-aluno-nome">Nome</label>
@@ -147,6 +150,15 @@
                 <input id="cadastro-aluno-senha" name="senha" type="password" minlength="12" maxlength="128" autocomplete="new-password" required>
                 <button type="submit" class="btn-smais">Criar conta de aluno</button>
                 <p id="cadastro-aluno-feedback" role="status"></p>
+            </form>
+            <form id="administrar-aluno" class="app-form">
+                <label for="aluno-cadastrado">Escolha pelo nome ou e-mail</label>
+                <select id="aluno-cadastrado" required></select>
+                <label for="aluno-nova-senha">Nova senha do aluno</label>
+                <input id="aluno-nova-senha" type="password" autocomplete="new-password" minlength="12" maxlength="128" required>
+                <button class="btn-mini" type="submit">Redefinir senha</button>
+                <button class="btn-mini btn-delete" id="excluir-aluno" type="button">Excluir aluno</button>
+                <p id="gestao-alunos-feedback" role="status"></p>
             </form>
         </details>
 

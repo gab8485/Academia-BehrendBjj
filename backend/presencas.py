@@ -108,6 +108,7 @@ def listar_colegas_confirmados(
         ConfirmacaoAula.aula_id == aula_id,
         ConfirmacaoAula.resposta == "vou",
         User.papel == "aluno",
+        User.ativo.is_(True),
     ).order_by(User.nome, User.id)
     response.headers["Cache-Control"] = "no-store"
     return [nome.strip() for (nome,) in colegas]
@@ -173,3 +174,50 @@ def cadastrar_aluno(
         db.rollback()
         raise HTTPException(409, "Esse e-mail já está em uso.")
     return {"mensagem": "Conta de aluno criada."}
+
+
+class NovaSenhaAluno(BaseModel):
+    senha: str = Field(min_length=12, max_length=128)
+
+
+@router.get("/gestao/alunos")
+def listar_alunos(
+    response: Response,
+    admin: User = Depends(require_roles("admin")),
+    db: Session = Depends(get_db),
+):
+    response.headers["Cache-Control"] = "no-store"
+    alunos = db.query(User.id, User.nome, User.email).filter(
+        User.papel == "aluno", User.ativo.is_(True),
+    ).order_by(User.nome, User.id)
+    return [{"id": id_, "nome": nome, "email": email} for id_, nome, email in alunos]
+
+
+def aluno_ativo(aluno_id: int, db: Session) -> User:
+    aluno = db.query(User).filter_by(id=aluno_id, papel="aluno", ativo=True).first()
+    if aluno is None:
+        raise HTTPException(404, "Aluno ativo não encontrado.")
+    return aluno
+
+
+@router.patch("/gestao/alunos/{aluno_id}/senha")
+def redefinir_senha_aluno(
+    aluno_id: int,
+    dados: NovaSenhaAluno,
+    admin: User = Depends(require_roles("admin")),
+    db: Session = Depends(get_db),
+):
+    aluno_ativo(aluno_id, db).senha_hash = hash_password(dados.senha)
+    db.commit()
+    return {"mensagem": "Senha redefinida. O aluno pode entrar com a nova senha."}
+
+
+@router.delete("/gestao/alunos/{aluno_id}")
+def desativar_aluno(
+    aluno_id: int,
+    admin: User = Depends(require_roles("admin")),
+    db: Session = Depends(get_db),
+):
+    aluno_ativo(aluno_id, db).ativo = False
+    db.commit()
+    return {"mensagem": "Aluno removido da lista e acesso desativado."}

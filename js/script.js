@@ -458,7 +458,9 @@ if (formMinhaConta) formMinhaConta.hidden = !token || !userStr;
         window.location.assign("/confirmar-aula.html");
         return;
     }
-    document.getElementById("cadastro-aluno").hidden = user.papel !== "admin";
+    for (const id of ["cadastro-aluno", "gestao-alunos"]) {
+        document.getElementById(id).hidden = user.papel !== "admin";
+    }
     dashboardArea.style.display = "block";
     userBanner.style.display = "flex";
     document.getElementById("logged-user-name").textContent = user.nome;

@@ -97,6 +97,12 @@ def _b64url_decode(data: str) -> bytes:
     return base64.urlsafe_b64decode(data + padding)
 
 
+def versao_da_senha(user: User) -> str:
+    return hmac.new(
+        SECRET_KEY.encode("utf-8"), user.senha_hash.encode("utf-8"), hashlib.sha256
+    ).hexdigest()
+
+
 def create_access_token(user: User) -> str:
     """Gera token JWT-compatível assinado com HMAC-SHA256 contendo identidade e papel."""
     header = {"alg": "HS256", "typ": "JWT"}
@@ -108,6 +114,8 @@ def create_access_token(user: User) -> str:
         "iat": int(time.time()),
         "exp": int(time.time()) + TOKEN_EXPIRATION_SECONDS,
     }
+    if user.papel == "aluno":
+        payload["versao_senha"] = versao_da_senha(user)
     header_b64 = _b64url_encode(json.dumps(header, separators=(",", ":")).encode("utf-8"))
     payload_b64 = _b64url_encode(json.dumps(payload, separators=(",", ":")).encode("utf-8"))
     signing_input = f"{header_b64}.{payload_b64}".encode("ascii")
@@ -163,6 +171,8 @@ def get_current_user(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Usuário não encontrado ou inativo.",
         )
+    if user.papel == "aluno" and payload.get("versao_senha") != versao_da_senha(user):
+        raise HTTPException(401, "Sessão expirada. Entre novamente.")
     return user
 
 
