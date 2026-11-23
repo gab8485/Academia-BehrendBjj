@@ -69,80 +69,79 @@ function enrichNavigation() {
 
 // 2. INTEGRAÇÃO DOS FORMULÁRIOS DE CONTATO EM TODAS AS PÁGINAS
 function setupContactForms() {
-    const contactForms = document.querySelectorAll(".contact form");
-    contactForms.forEach(form => {
-        if (form.dataset.bound === "true") return;
+    document.querySelectorAll(".contact form").forEach(form => {
+        const nome = form.querySelector('input[type="text"]');
+        const email = form.querySelector('input[type="email"]');
+        const telefone = form.querySelector('input[type="number"], input[type="tel"]');
+        const enviar = form.querySelector('[type="submit"]');
+        if (!nome || !email || !telefone || !enviar || form.dataset.bound === "true") return;
         form.dataset.bound = "true";
 
-        // Adiciona campo de mensagem caso o formulário original só tenha nome, email e telefone
-        const inputs = form.querySelectorAll("input");
-        if (!form.querySelector("textarea") && !form.querySelector('input[name="mensagem"]')) {
-            const msgBox = document.createElement("div");
-            msgBox.className = "inputBox";
-            msgBox.innerHTML = `
-                <span class="fas fa-comment-dots"></span>
-                <input type="text" name="mensagem" placeholder="Mensagem ou dúvida (ex: valores, horários)" required>
-            `;
-            const submitBtn = form.querySelector('input[type="submit"], button[type="submit"]');
-            if (submitBtn) {
-                form.insertBefore(msgBox, submitBtn);
-            }
+        telefone.type = "tel";
+        const campos = [
+            [nome, "Nome", 2, 120, "name"],
+            [email, "E-mail", 5, 150, "email"],
+            [telefone, "Telefone com DDD", 8, 25, "tel"]
+        ];
+        for (const [campo, rotulo, min, max, autocomplete] of campos) {
+            campo.placeholder = rotulo;
+            campo.setAttribute("aria-label", rotulo);
+            campo.autocomplete = autocomplete;
+            campo.minLength = min;
+            campo.maxLength = max;
+            campo.required = true;
         }
 
-        const feedbackDiv = document.createElement("div");
-        feedbackDiv.className = "api-feedback";
-        feedbackDiv.style.marginTop = "1.5rem";
-        feedbackDiv.style.fontSize = "1.5rem";
-        form.appendChild(feedbackDiv);
+        const caixaMensagem = document.createElement("div");
+        caixaMensagem.className = "inputBox";
+        caixaMensagem.innerHTML = `
+            <span class="fas fa-comment-dots" aria-hidden="true"></span>
+            <input type="text" name="mensagem" aria-label="Mensagem" placeholder="Mensagem ou dúvida" minlength="3" maxlength="1000" required>
+        `;
+        form.insertBefore(caixaMensagem, enviar);
+        const mensagem = caixaMensagem.querySelector("input");
 
-        form.addEventListener("submit", async (e) => {
-            e.preventDefault();
-            const textInput = form.querySelector('input[type="text"]');
-            const emailInput = form.querySelector('input[type="email"]');
-            const phoneInput = form.querySelector('input[type="number"], input[type="tel"]');
-            const msgInput = form.querySelector('input[name="mensagem"], textarea');
+        const feedback = document.createElement("div");
+        feedback.className = "api-feedback";
+        feedback.setAttribute("role", "status");
+        feedback.style.marginTop = "1.5rem";
+        feedback.style.fontSize = "1.5rem";
+        form.appendChild(feedback);
 
-            const payload = {
-                nome: textInput ? textInput.value.trim() : "",
-                email: emailInput ? emailInput.value.trim() : "",
-                telefone: phoneInput ? String(phoneInput.value).trim() : "",
-                mensagem: msgInput && msgInput.value.trim()
-                    ? msgInput.value.trim()
-                    : "Solicitação de contato enviada pelo site institucional."
-            };
-
-            if (!payload.nome || !payload.email || !payload.telefone) {
-                feedbackDiv.style.color = "#f87171";
-                feedbackDiv.textContent = "Por favor, preencha nome, e-mail e telefone.";
-                return;
-            }
-
-            feedbackDiv.style.color = "#93c5fd";
-            feedbackDiv.textContent = "Enviando mensagem...";
+        form.addEventListener("submit", async (evento) => {
+            evento.preventDefault();
+            if (enviar.disabled) return;
+            enviar.disabled = true;
+            feedback.style.color = "#93c5fd";
+            feedback.textContent = "Enviando mensagem…";
 
             try {
-                const resp = await fetch(`${API_BASE}/contatos`, {
+                const resposta = await fetch(`${API_BASE}/contatos`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(payload)
+                    body: JSON.stringify({
+                        nome: nome.value.trim(),
+                        email: email.value.trim(),
+                        telefone: telefone.value.trim(),
+                        mensagem: mensagem.value.trim()
+                    })
                 });
-                if (!resp.ok) {
-                    const errData = await resp.json().catch(() => ({}));
-                    throw new Error(errData.detail || "Falha ao registrar contato na API.");
+                if (!resposta.ok) {
+                    const { detail } = await resposta.json().catch(() => ({}));
+                    throw new Error(resposta.status === 422
+                        ? "Confira o nome, o e-mail, o telefone e a mensagem."
+                        : typeof detail === "string" ? detail : "");
                 }
-                const saved = await resp.json();
-                feedbackDiv.style.color = "#4ade80";
-                feedbackDiv.textContent = `✅ Mensagem #${saved.id} registrada com sucesso! Nossa equipe entrará em contato.`;
+                feedback.style.color = "#4ade80";
+                feedback.textContent = "Mensagem enviada. Nossa equipe entrará em contato.";
                 form.reset();
-            } catch (err) {
-                // Fallback local caso aberto sem o servidor back-end
-                const localContacts = JSON.parse(localStorage.getItem("behrend_contatos_fallback") || "[]");
-                const novo = { id: localContacts.length + 1, ...payload, lida: false, criado_em: new Date().toISOString() };
-                localContacts.push(novo);
-                localStorage.setItem("behrend_contatos_fallback", JSON.stringify(localContacts));
-                feedbackDiv.style.color = "#4ade80";
-                feedbackDiv.textContent = `✅ Mensagem registrada com sucesso! (${err.message ? "Modo local/estático" : ""})`;
-                form.reset();
+            } catch (erro) {
+                feedback.style.color = "#f87171";
+                feedback.textContent = erro.message && !(erro instanceof TypeError)
+                    ? erro.message
+                    : "Não foi possível enviar a mensagem. Tente novamente.";
+            } finally {
+                enviar.disabled = false;
             }
         });
     });
@@ -496,6 +495,7 @@ if (formMinhaConta) formMinhaConta.hidden = !token || !userStr;
             : "<strong>🥋 Papel INSTRUTOR ativo:</strong> Permissão operacional (confirmar/realizar agendamentos e responder contatos). Ações de exclusão (DELETE) e criação de turmas retornam HTTP 403.";
 
         const agendamentos = await respAg.json();
+        if (!respCt.ok) throw new Error("Não foi possível carregar as mensagens de contato.");
         const contatos = await respCt.json();
 
         document.getElementById("kpi-agendamentos").textContent = agendamentos.length;
@@ -518,17 +518,40 @@ if (formMinhaConta) formMinhaConta.hidden = !token || !userStr;
             </tr>
         `).join("") : `<tr><td colspan="6">Nenhum agendamento registrado até o momento.</td></tr>`;
 
-        tbodyCt.innerHTML = contatos.length ? contatos.map(c => `
-            <tr>
-                <td>#${c.id}</td>
-                <td>${c.nome}<br><small>${c.email} | ${c.telefone}</small></td>
-                <td>${c.mensagem}</td>
-                <td>${c.lida ? `<span class="status-pill status-confirmado">Lida por ${c.respondida_por || "Equipe"}</span>` : `<span class="status-pill status-pendente">Pendente</span>`}</td>
-                <td>
-                    ${!c.lida ? `<button class="btn-mini btn-confirm" onclick="marcarContatoLido(${c.id})">Marcar Lida</button>` : "—"}
-                </td>
-            </tr>
-        `).join("") : `<tr><td colspan="5">Nenhuma mensagem de contato registrada.</td></tr>`;
+        tbodyCt.replaceChildren();
+        if (!contatos.length) {
+            const celula = tbodyCt.insertRow().insertCell();
+            celula.colSpan = 5;
+            celula.textContent = "Nenhuma mensagem de contato registrada.";
+        }
+        // A API armazena nome e mensagem com entidades HTML escapadas.
+        const caracteres = { amp: "&", lt: "<", gt: ">", quot: '"', "#x27": "'" };
+        const textoContato = valor => valor.replace(/&(amp|lt|gt|quot|#x27);/g, (_, entidade) => caracteres[entidade]);
+        for (const contato of contatos) {
+            const linha = tbodyCt.insertRow();
+            linha.insertCell().textContent = `#${contato.id}`;
+            const visitante = linha.insertCell();
+            visitante.append(
+                textoContato(contato.nome), document.createElement("br"),
+                `Telefone: ${contato.telefone}`, document.createElement("br"), contato.email
+            );
+            linha.insertCell().textContent = textoContato(contato.mensagem);
+            const situacao = document.createElement("span");
+            situacao.className = `status-pill status-${contato.lida ? "confirmado" : "pendente"}`;
+            situacao.textContent = contato.lida ? `Lida por ${contato.respondida_por || "Equipe"}` : "Pendente";
+            linha.insertCell().append(situacao);
+            const acao = linha.insertCell();
+            if (contato.lida) {
+                acao.textContent = "—";
+            } else {
+                const botao = document.createElement("button");
+                botao.type = "button";
+                botao.className = "btn-mini btn-confirm";
+                botao.textContent = "Marcar lida";
+                botao.addEventListener("click", () => marcarContatoLido(contato.id));
+                acao.append(botao);
+            }
+        }
     } catch (err) {
         rbacAlert.style.display = "block";
         rbacAlert.className = "alert-box error";
