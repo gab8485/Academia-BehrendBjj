@@ -11,16 +11,6 @@ const { hostname, port } = window.location;
 const servidorLocal = ["localhost", "127.0.0.1"].includes(hostname) && ["5500", "5501"].includes(port);
 const API_BASE = servidorLocal ? `http://${hostname}:8000/api/v1` : "/api/v1";
 
-// Turmas padrão de fallback caso a página seja aberta via arquivo estático (Live Server) sem o FastAPI
-const FALLBACK_TURMAS = [
-    { id: 1, modalidade: "Jiu-Jitsu Adulto", publico: "Adulto", dias_semana: "Segunda a Sexta", horario: "19:30 - 21:00", instrutor: "Mestre Erick Behrend", capacidade_maxima: 25, vagas_disponiveis: 22 },
-    { id: 2, modalidade: "Jiu-Jitsu Infantil", publico: "Infantil (5 a 14 anos)", dias_semana: "Terça e Quinta", horario: "18:00 - 19:00", instrutor: "Prof. Erick Behrend", capacidade_maxima: 20, vagas_disponiveis: 18 },
-    { id: 3, modalidade: "Judô Adulto", publico: "Adulto", dias_semana: "Segunda, Quarta e Sexta", horario: "20:00 - 21:30", instrutor: "Sensei Behrend Team", capacidade_maxima: 20, vagas_disponiveis: 19 },
-    { id: 4, modalidade: "Judô Infantil", publico: "Infantil (4 a 13 anos)", dias_semana: "Segunda, Quarta e Sexta", horario: "17:30 - 18:30", instrutor: "Sensei Behrend Team", capacidade_maxima: 18, vagas_disponiveis: 16 },
-    { id: 5, modalidade: "Muay Thai", publico: "Adulto / Juvenil", dias_semana: "Terça, Quinta e Sábado", horario: "19:00 - 20:00", instrutor: "Kru Behrend Team", capacidade_maxima: 22, vagas_disponiveis: 20 },
-    { id: 6, modalidade: "Submission / No-Gi", publico: "Adulto", dias_semana: "Quarta e Sexta", horario: "21:00 - 22:00", instrutor: "Mestre Erick Behrend", capacidade_maxima: 20, vagas_disponiveis: 20 }
-];
-
 // 1. MENU RESPONSIVO (Sem ReferenceError de variáveis não declaradas)
 const navbar = document.querySelector(".navbar");
 const searchForm = document.querySelector(".search-form");
@@ -163,31 +153,35 @@ async function setupAgendamentoPage() {
         dataInput.value = tomorrow;
     }
 
-    let turmas = FALLBACK_TURMAS;
+    let turmas = [];
+    let aviso = "Nenhuma turma está disponível no momento.";
     try {
         const resp = await fetch(`${API_BASE}/turmas`);
-        if (resp.ok) {
-            turmas = await resp.json();
-        }
+        if (!resp.ok) throw new Error();
+        turmas = await resp.json();
     } catch (_) {
-        // Usa fallback se offline
+        aviso = "Não foi possível carregar os horários. Recarregue a página para tentar novamente.";
     }
 
     if (turmaSelect) {
-        turmaSelect.innerHTML = turmas.map(t =>
-            `<option value="${t.id}">${t.modalidade} — ${t.dias_semana} (${t.horario}) [${t.vagas_disponiveis} vagas]</option>`
-        ).join("");
+        turmaSelect.replaceChildren(new Option("Escolha uma turma", ""));
+        for (const turma of turmas) {
+            turmaSelect.add(new Option(
+                `${turma.modalidade} · ${turma.dias_semana} · ${turma.horario}`, turma.id
+            ));
+        }
+        if (formAgendamento) formAgendamento.querySelector('[type="submit"]').disabled = !turmas.length;
     }
 
     if (turmasCardsContainer) {
-        turmasCardsContainer.innerHTML = turmas.map(t => `
+        if (!turmas.length) turmasCardsContainer.textContent = aviso;
+        else turmasCardsContainer.innerHTML = turmas.map(t => `
             <div class="turma-card">
                 <h4>${t.modalidade}</h4>
                 <p><strong>Público:</strong> ${t.publico}</p>
                 <p><strong>Dias:</strong> ${t.dias_semana}</p>
                 <p><strong>Horário:</strong> ${t.horario}</p>
                 <p><strong>Instrutor:</strong> ${t.instrutor}</p>
-                <span class="vaga-badge">${t.vagas_disponiveis} de ${t.capacidade_maxima} vagas disponíveis</span>
             </div>
         `).join("");
     }
