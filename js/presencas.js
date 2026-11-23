@@ -91,12 +91,16 @@ function iniciarConfirmacaoAluno() {
             colegas.addEventListener("toggle", carregarConfirmados);
 
             cartao.append(titulo, estado);
-            for (const resposta of ["vou", "nao_vou"]) {
+            for (const resposta of ["vou", "nao_vou", null]) {
                 const botao = document.createElement("button");
                 botao.type = "button";
                 botao.className = "btn-mini";
-                botao.textContent = textoResposta(resposta);
-                botao.setAttribute("aria-pressed", String(aula.resposta === resposta));
+                botao.textContent = resposta === null ? "Desmarcar" : textoResposta(resposta);
+                if (resposta === null) {
+                    botao.disabled = aula.resposta === null;
+                } else {
+                    botao.setAttribute("aria-pressed", String(aula.resposta === resposta));
+                }
                 botoes.push([botao, resposta]);
                 botao.addEventListener("click", async () => {
                     const sessao = tokenAluno;
@@ -105,10 +109,11 @@ function iniciarConfirmacaoAluno() {
                         await apiPresencas(`/minhas-aulas/${aula.id}`, {
                             method: "PUT", body: JSON.stringify({ resposta })
                         }, sessao);
+                        aula.resposta = resposta;
                         void carregarConfirmados();
-                        estado.textContent = `Resposta salva: ${textoResposta(resposta)}`;
+                        estado.textContent = resposta === null ? "Sem resposta" : `Resposta salva: ${textoResposta(resposta)}`;
                         for (const [item, valor] of botoes) {
-                            item.setAttribute("aria-pressed", String(valor === resposta));
+                            if (valor !== null) item.setAttribute("aria-pressed", String(valor === resposta));
                         }
                     } catch (erro) {
                         if (erro.status === 401 && tokenAluno === sessao) {
@@ -118,7 +123,9 @@ function iniciarConfirmacaoAluno() {
                             estado.textContent = erro.message;
                         }
                     } finally {
-                        for (const [item] of botoes) item.disabled = false;
+                        for (const [item, valor] of botoes) {
+                            item.disabled = valor === null && aula.resposta === null;
+                        }
                     }
                 });
                 cartao.append(botao);

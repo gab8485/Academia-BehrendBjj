@@ -332,7 +332,6 @@ if (formMinhaConta) {
 
     const btnDemoAdmin = document.getElementById("btn-demo-admin");
     const btnDemoInstrutor = document.getElementById("btn-demo-instrutor");
-    const btnDemoAluno = document.getElementById("btn-demo-aluno");
     const btnLogout = document.getElementById("btn-logout");
 
 function focarCampoEmail() {
@@ -341,7 +340,6 @@ function focarCampoEmail() {
 
 if (btnDemoAdmin) btnDemoAdmin.onclick = focarCampoEmail;
 if (btnDemoInstrutor) btnDemoInstrutor.onclick = focarCampoEmail;
-if (btnDemoAluno) btnDemoAluno.onclick = focarCampoEmail;
 
 
 
