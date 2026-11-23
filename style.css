@@ -2010,3 +2010,8 @@ align-self: start;
     outline: 2px solid white;
     outline-offset: 2px;
 }
+
+.menu .box-container :is(.card-adulto, .card-infantil, .card-nogi) > .btn-smais {
+    background-color: var(--main-color);
+    font-weight: 700;
+}
