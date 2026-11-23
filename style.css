@@ -348,7 +348,7 @@ background:transparent;
     color:#eee;
 }
 .homejiad-container{
-    background:url(./img/jiuadjpeg.jpeg) no-repeat;
+    background:url(./img/bjj2.jpeg) no-repeat;
     background-size: cover;
     background-position: center;
 }
@@ -1868,4 +1868,121 @@ align-self: start;
         justify-content: center;
         text-align: center;
     }
+}
+
+#login-aluno[hidden],
+#area-minhas-aulas[hidden],
+#cadastro-aluno[hidden] {
+    display: none;
+}
+
+#lista-minhas-aulas {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+    gap: 1rem;
+    margin: 1rem 0;
+}
+
+.aula-confirmacao button {
+    margin: 0.5rem 0.5rem 0 0;
+}
+
+.aula-confirmacao button[aria-pressed="true"] {
+    background: #1d4ed8;
+    color: white;
+}
+
+#gestao-confirmacoes summary {
+    cursor: pointer;
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+#gestao-confirmacoes select {
+    max-width: 100%;
+    margin: 0.8rem;
+}
+
+.aula-confirmados {
+    margin-top: 0.8rem;
+    font-size: 1.6rem;
+}
+
+.aula-confirmados summary {
+    box-sizing: border-box;
+    min-height: 44px;
+    padding: 10px 12px;
+    border: 1px solid #405477;
+    border-radius: 6px;
+    color: #d5e5ff;
+    background: #1b263a;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.aula-confirmados summary:focus-visible {
+    outline: 2px solid #a9c9ff;
+    outline-offset: 2px;
+}
+
+.aula-confirmados p {
+    margin: 0.8rem 0 0;
+    text-transform: none;
+    overflow-wrap: anywhere;
+}
+
+#lista-confirmacoes {
+    font-size: 1.6rem;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+#lista-confirmacoes:not(:empty) {
+    margin: 0.8rem 0 1.2rem;
+}
+
+#lista-confirmacoes li {
+    margin-inline-start: 1.5em;
+}
+
+.capa-jiu-mobile > section,
+.homesobre-container > .homesobre {
+    width: 100%;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: clamp(1.2rem, 4vw, 5rem);
+}
+
+.capa-jiu-mobile .content,
+.homesobre-container .content {
+    min-width: 0;
+    text-align: center;
+}
+
+.capa-jiu-mobile .content .titulo-modalidade,
+.homesobre .content .titulo-modalidade,
+.titulo-secao,
+.contact > .titulo-endereco {
+    display: inline-block;
+    max-width: 100%;
+    margin: 0;
+    padding: 0.3em 0.58em;
+    text-shadow: 0 2px 6px #000c, 0 1px 2px #000;
+    color: #fff;
+    font-family: "Roboto", system-ui, sans-serif;
+    font-size: clamp(2.8rem, 6vw, 6.4rem);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: 0.01em;
+    text-transform: none;
+    text-wrap: balance;
+}
+
+.titulo-secao,
+.contact > .titulo-endereco {
+    display: block;
+    padding: 0 0 0.75em;
+    text-align: center;
+    font-size: clamp(2.8rem, 5vw, 4.4rem);
 }

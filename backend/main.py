@@ -13,6 +13,7 @@ from sqlalchemy.orm import Session
 
 from backend.database import Base, SessionLocal, engine, get_db
 from backend.models import User
+from backend.presencas import router as presencas_router
 from backend.schemas import (
     AgendamentoCreate,
     AgendamentoResponse,
@@ -71,6 +72,8 @@ def manifesto_app():
         media_type="application/manifest+json",
     )
 
+app.include_router(presencas_router)
+
 app.add_middleware(
     CORSMiddleware,
       allow_origins=[
@@ -79,9 +82,10 @@ app.add_middleware(
         "http://localhost:5500",
         "http://127.0.0.1:5500",
         "http://127.0.0.1:5501",
+        "http://localhost:5501",
     ],
     allow_credentials=True,
-    allow_methods=["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
+    allow_methods=["GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["Authorization", "Content-Type"],
 )
 
@@ -355,6 +359,7 @@ def serve_static_pages(filename: str):
         "nogi.html",
         "agendamento.html",
         "painel.html",
+        "confirmar-aula.html",
         "style.css",
     }
     if filename == "endereco.html" and (PROJECT_ROOT / "endereço.html").exists():

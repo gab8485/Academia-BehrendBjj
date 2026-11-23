@@ -17,10 +17,7 @@ from sqlalchemy.orm import Session
 from backend.database import get_db
 from backend.models import User
 
-SECRET_KEY = os.getenv(
-    "BEHREND_SECRET_KEY",
-    "behrend-bjj-ceub-2026-default-dev-secret-key-change-in-prod",
-)
+SECRET_KEY = os.getenv("BEHREND_SECRET_KEY") or secrets.token_urlsafe(48)
 TOKEN_EXPIRATION_SECONDS = int(os.getenv("TOKEN_EXPIRATION_SECONDS", "28800"))  # 8h
 PBKDF2_ITERATIONS = 120_000
 
