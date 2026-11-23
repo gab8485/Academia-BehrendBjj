@@ -1,10 +1,12 @@
 """Camada de Serviço (Regras de Negócio): orquestra validações de domínio, agendamentos e seed."""
 import os
 import secrets
+from datetime import date
 from typing import List, Optional
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 
+from backend.grade import DIAS, horarios_experimentais
 from backend.models import AgendamentoExperimental, MensagemContato, Turma, User
 from backend.repositories import (
     AgendamentoRepository,
@@ -51,59 +53,46 @@ def seed_initial_data(db: Session) -> None:
                 papel=papel,
             )
 
-    if not TurmaRepository.list_all(db, apenas_ativas=False):
-        default_turmas = [
-            {
-                "modalidade": "Jiu-Jitsu Adulto",
-                "publico": "Adulto",
-                "dias_semana": "Segunda a Sexta",
-                "horario": "19:30 - 21:00",
-                "instrutor": "Mestre Erick Behrend",
-                "capacidade_maxima": 25,
-            },
-            {
-                "modalidade": "Jiu-Jitsu Infantil",
-                "publico": "Infantil (5 a 14 anos)",
-                "dias_semana": "Terça e Quinta",
-                "horario": "18:00 - 19:00",
-                "instrutor": "Prof. Erick Behrend",
-                "capacidade_maxima": 20,
-            },
-            {
-                "modalidade": "Judô Adulto",
-                "publico": "Adulto",
-                "dias_semana": "Segunda, Quarta e Sexta",
-                "horario": "20:00 - 21:30",
-                "instrutor": "Sensei Behrend Team",
-                "capacidade_maxima": 20,
-            },
-            {
-                "modalidade": "Judô Infantil",
-                "publico": "Infantil (4 a 13 anos)",
-                "dias_semana": "Segunda, Quarta e Sexta",
-                "horario": "17:30 - 18:30",
-                "instrutor": "Sensei Behrend Team",
-                "capacidade_maxima": 18,
-            },
-            {
-                "modalidade": "Muay Thai",
-                "publico": "Adulto / Juvenil",
-                "dias_semana": "Terça, Quinta e Sábado",
-                "horario": "19:00 - 20:00",
-                "instrutor": "Kru Behrend Team",
-                "capacidade_maxima": 22,
-            },
-            {
-                "modalidade": "Submission / No-Gi",
-                "publico": "Adulto",
-                "dias_semana": "Quarta e Sexta",
-                "horario": "21:00 - 22:00",
-                "instrutor": "Mestre Erick Behrend",
-                "capacidade_maxima": 20,
-            },
-        ]
-        for t in default_turmas:
-            TurmaRepository.create(db, **t)
+    sincronizar_turmas_experimentais(db)
+
+
+def turmas_da_grade():
+    resultado = {}
+    for (grupo, hora, formato), dias in horarios_experimentais().items():
+        modalidade = f"Jiu-Jitsu {grupo.capitalize()} ({formato})"
+        dias_semana = " e ".join(DIAS[dia] for dia in dias)
+        resultado[(modalidade, dias_semana, hora)] = dias
+    return resultado
+
+
+def sincronizar_turmas_experimentais(db: Session) -> None:
+    # Identifica os horários antigos criados pelo sistema sem excluir seus agendamentos.
+    antigas = {
+        ("Jiu-Jitsu Adulto", "Segunda a Sexta", "19:30 - 21:00"),
+        ("Jiu-Jitsu Infantil", "Terça e Quinta", "18:00 - 19:00"),
+        ("Judô Adulto", "Segunda, Quarta e Sexta", "20:00 - 21:00"),
+        ("Judô Infantil", "Terça e Quinta", "17:30 - 18:30"),
+        ("Muay Thai", "Terça, Quinta e Sábado", "19:00 - 20:00"),
+        ("Submission / No-Gi", "Quarta e Sexta", "21:00 - 22:00"),
+    }
+    existentes = set()
+    for turma in TurmaRepository.list_all(db, apenas_ativas=False):
+        chave = (turma.modalidade, turma.dias_semana, turma.horario)
+        existentes.add(chave)
+        if chave in antigas:
+            turma.ativa = False
+
+    for modalidade, dias, hora in sorted(turmas_da_grade().keys() - existentes):
+        adulto = modalidade.startswith("Jiu-Jitsu Adulto")
+        db.add(Turma(
+            modalidade=modalidade,
+            publico="Adulto" if adulto else "Infantil (5 a 14 anos)",
+            dias_semana=dias,
+            horario=hora,
+            instrutor="Mestre Erick Behrend" if adulto else "Prof. Erick Behrend",
+            capacidade_maxima=25 if adulto else 20,
+        ))
+    db.commit()
 
 
 class AuthService:
@@ -196,6 +185,10 @@ class AgendamentoService:
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="Turma selecionada não existe ou está inativa.",
             )
+
+        dias = turmas_da_grade().get((turma.modalidade, turma.dias_semana, turma.horario))
+        if dias is not None and date.fromisoformat(dados.data_aula).weekday() not in dias:
+            raise HTTPException(422, f"Escolha uma data em que esta turma treina: {turma.dias_semana}.")
 
         # Regra de Negócio 1: Prevenção de agendamento duplicado na mesma turma e data
         duplicado = AgendamentoRepository.find_duplicate(

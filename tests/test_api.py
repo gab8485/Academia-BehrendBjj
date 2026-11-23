@@ -81,8 +81,8 @@ def test_listar_turmas_publico(client: TestClient):
     response = client.get("/api/v1/turmas")
     assert response.status_code == 200
     turmas = response.json()
-    assert len(turmas) == 6
-    assert turmas[0]["modalidade"] == "Jiu-Jitsu Adulto"
+    assert len(turmas) == 20
+    assert turmas[0]["modalidade"] == "Jiu-Jitsu Adulto (Gi)"
     assert turmas[0]["vagas_disponiveis"] == turmas[0]["capacidade_maxima"]
 
 
@@ -98,7 +98,7 @@ def test_fluxo_completo_agendamento_experimental(client: TestClient):
         "email": "carlos.teste@exemplo.com",
         "telefone": "(61) 99999-1234",
         "turma_id": 1,
-        "data_aula": "2026-12-10",
+        "data_aula": "2026-12-09",
         "nivel_experiencia": "Iniciante",
         "observacoes": "Primeira aula experimental de Jiu-Jitsu",
     }
@@ -107,7 +107,7 @@ def test_fluxo_completo_agendamento_experimental(client: TestClient):
     criado = resp_create.json()
     assert criado["protocolo"].startswith("BJJ-")
     assert criado["status"] == "pendente"
-    assert criado["modalidade_turma"] == "Jiu-Jitsu Adulto"
+    assert criado["modalidade_turma"] == "Jiu-Jitsu Adulto (Gi)"
 
     # Consulta pública pelo protocolo gerado
     resp_consulta = client.get(
@@ -136,7 +136,7 @@ def test_regra_negocio_bloqueio_agendamento_duplicado(client: TestClient):
         "email": "marina@exemplo.com",
         "telefone": "(61) 98888-0000",
         "turma_id": 2,
-        "data_aula": "2026-12-11",
+        "data_aula": "2026-12-14",
         "nivel_experiencia": "Iniciante",
     }
     r1 = client.post("/api/v1/agendamentos", json=payload)
@@ -280,7 +280,7 @@ def test_owasp_a03_sanitizacao_xss_e_prevencao_sqli(client: TestClient):
         "email": "joao.xss@exemplo.com",
         "telefone": "(61) 91234-5678",
         "turma_id": 1,
-        "data_aula": "2026-12-15",
+        "data_aula": "2026-12-16",
         "nivel_experiencia": "Iniciante",
         "observacoes": "<img src=x onerror=alert(1)>",
     }

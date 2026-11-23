@@ -1,5 +1,5 @@
 """Schemas Pydantic para validação rigorosa de entrada e serialização da API /api/v1."""
-from datetime import datetime
+from datetime import date, datetime
 import re
 from typing import Optional
 from pydantic import BaseModel, ConfigDict, Field, field_validator
@@ -113,6 +113,10 @@ class AgendamentoCreate(BaseModel):
         cleaned = v.strip()
         if not DATE_REGEX.match(cleaned):
             raise ValueError("A data da aula deve estar no formato YYYY-MM-DD.")
+        try:
+            date.fromisoformat(cleaned)
+        except ValueError as erro:
+            raise ValueError("Informe uma data válida para a aula.") from erro
         return cleaned
 
 
