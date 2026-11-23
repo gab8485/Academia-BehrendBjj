@@ -1948,7 +1948,9 @@ align-self: start;
 
 .capa-jiu-mobile > section {
     width: 100%;
+    align-items: flex-end;
     justify-content: center;
+    padding-bottom: clamp(1.2rem, 4vw, 5rem);
 }
 
 .capa-jiu-mobile .content {
@@ -1961,7 +1963,6 @@ align-self: start;
     max-width: 100%;
     margin: 0;
     padding: 0.3em 0.58em;
-    transform: translateY(clamp(2.4rem, 6vw, 8rem));
     text-shadow: 0 2px 6px #000c, 0 1px 2px #000;
     color: #fff;
     font-family: "Roboto", system-ui, sans-serif;
