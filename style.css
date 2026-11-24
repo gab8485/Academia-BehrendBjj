@@ -2100,3 +2100,9 @@ align-self: start;
     gap: 0.8rem;
     align-items: center;
 }
+
+.evento-cartao .evento-acoes > .btn-smais {
+    padding: 0.65rem 1.5rem;
+    font-size: 1.5rem;
+    min-height: 3.6rem;
+}
