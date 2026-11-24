@@ -1607,8 +1607,9 @@ nav li a{
         margin-right: 24px;
         width: min(330px, calc(100vw - 48px));
         height: auto;
-        max-height: 70vh;
+        max-height: min(70vh, calc(100dvh - 100% - 12px));
         overflow-y: auto;
+        overscroll-behavior-y: contain;
         box-sizing: border-box;
         display: flex;
         flex-direction: column;
@@ -1630,12 +1631,17 @@ nav li a{
     }
 
     .header .navbar.active .dropdown-menu {
+        display: none;
         position: static;
         margin: 4px 0 8px 12px;
         padding: 4px;
         background: #242438;
         border-radius: 8px;
         box-shadow: none;
+    }
+
+    .header .navbar.active .dropdown-menu.submenu-aberto {
+        display: block;
     }
 }
 .grade-aulas {
