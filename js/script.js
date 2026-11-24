@@ -71,6 +71,13 @@ function enrichNavigation() {
         navbar.appendChild(painelLink);
     }
 
+    if (!links.includes("eventos.html")) {
+        const eventos = document.createElement("a");
+        eventos.href = "eventos.html";
+        eventos.textContent = "Eventos";
+        navbar.appendChild(eventos);
+    }
+
     // Garante que todos os botões "Comece agora" / "Começar agora" do cabeçalho levem para a inscrição (agendamento.html)
     document.querySelectorAll("header .btn1").forEach(btn => {
         btn.textContent = "Começar agora";
