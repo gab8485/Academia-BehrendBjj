@@ -25,6 +25,29 @@ if (menuBtn && navbar) {
     };
 }
 
+if (navbar) {
+    const menuCompacto = window.matchMedia("(max-width: 991px)");
+    for (const submenu of navbar.querySelectorAll(".dropdown-menu")) {
+        const link = submenu.previousElementSibling;
+        if (!link || !link.matches("a")) continue;
+
+        function ajustarSubmenu() {
+            submenu.classList.remove("submenu-aberto");
+            if (menuCompacto.matches) link.setAttribute("aria-expanded", "false");
+            else link.removeAttribute("aria-expanded");
+        }
+
+        ajustarSubmenu();
+        menuCompacto.addEventListener("change", ajustarSubmenu);
+        link.addEventListener("click", evento => {
+            if (!menuCompacto.matches || !navbar.classList.contains("active")) return;
+            evento.preventDefault();
+            const aberto = submenu.classList.toggle("submenu-aberto");
+            link.setAttribute("aria-expanded", String(aberto));
+        });
+    }
+}
+
 window.onscroll = () => {
     if (navbar) navbar.classList.remove("active");
     if (searchForm) searchForm.classList.remove("active");
