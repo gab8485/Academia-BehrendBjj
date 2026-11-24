@@ -10,6 +10,49 @@ const rotuloFoto = formularioEvento.querySelector('label[for="evento-foto"]');
 const rotuloFotoOriginal = rotuloFoto.textContent;
 let podePublicar = false;
 let editando = null;
+const emojisEvento = [
+    ["😀", "Sorriso"], ["😄", "Sorriso alegre"], ["😂", "Rindo"], ["😍", "Olhos de coração"],
+    ["🤩", "Olhos de estrela"], ["😎", "Óculos escuros"], ["🥳", "Festa"], ["😊", "Sorriso tímido"],
+    ["👍", "Joinha"], ["👏", "Palmas"], ["🙌", "Mãos levantadas"], ["🤝", "Aperto de mãos"],
+    ["🙏", "Mãos juntas"], ["💪", "Braço forte"], ["🤙", "Hang loose"], ["👊", "Soquinho"],
+    ["❤️", "Coração vermelho"], ["💙", "Coração azul"], ["💜", "Coração roxo"], ["💛", "Coração amarelo"],
+    ["🥋", "Kimono"], ["🏆", "Troféu"], ["🥇", "Medalha de ouro"], ["🎉", "Confete"],
+    ["🔥", "Fogo"], ["⭐", "Estrela"], ["📸", "Câmera"], ["📅", "Calendário"],
+];
+
+function adicionarSeletorEmoji(campo, nome) {
+    const seletor = document.createElement("details");
+    seletor.className = "evento-emojis";
+    const resumo = document.createElement("summary");
+    resumo.textContent = "😀 Emojis";
+    resumo.setAttribute("aria-label", `Emojis para ${nome}`);
+    const grade = document.createElement("div");
+    grade.className = "evento-emojis-grade";
+
+    for (const [emoji, descricao] of emojisEvento) {
+        const botao = document.createElement("button");
+        botao.type = "button";
+        botao.textContent = emoji;
+        botao.title = descricao;
+        botao.setAttribute("aria-label", descricao);
+        botao.addEventListener("click", () => {
+            const inicio = campo.selectionStart;
+            const fim = campo.selectionEnd;
+            if (campo.value.length - (fim - inicio) + emoji.length > campo.maxLength) {
+                feedbackEvento.textContent = `Limite de caracteres atingido no campo ${nome}.`;
+                return;
+            }
+            campo.setRangeText(emoji, inicio, fim, "end");
+            seletor.open = false;
+            campo.focus();
+            feedbackEvento.textContent = "";
+        });
+        grade.append(botao);
+    }
+    seletor.append(resumo, grade);
+    campo.after(seletor);
+}
+
 const dataCompeticao = new Intl.DateTimeFormat("pt-BR", { dateStyle: "long", timeZone: "UTC" });
 
 async function eventosApi(caminho, opcoes) {
@@ -116,6 +159,7 @@ function atualizarCamposEvento() {
 function limparFormulario() {
     editando = null;
     formularioEvento.reset();
+    for (const seletor of formularioEvento.querySelectorAll(".evento-emojis")) seletor.open = false;
     tipoEvento.disabled = false;
     secaoFormulario.querySelector("summary").textContent = "Nova publicação";
     botaoSalvar.textContent = "Publicar";
@@ -167,6 +211,8 @@ if (tokenEquipe) {
         podePublicar = ["admin", "instrutor"].includes(usuario.papel);
         secaoFormulario.hidden = !podePublicar;
         if (podePublicar) {
+            adicionarSeletorEmoji(formularioEvento.elements.namedItem("titulo"), "título");
+            adicionarSeletorEmoji(formularioEvento.elements.namedItem("descricao"), "descrição");
             for (const carregar of Object.values(carregarEventos)) void carregar(true);
         }
     }).catch(() => {});
