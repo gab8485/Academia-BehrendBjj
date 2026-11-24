@@ -3,6 +3,13 @@ const tipoEvento = document.getElementById("evento-tipo");
 const camposCompeticao = document.getElementById("evento-competicao");
 const feedbackEvento = document.getElementById("evento-feedback");
 const tokenEquipe = sessionStorage.getItem("behrend_token");
+const secaoFormulario = document.getElementById("publicar-evento");
+const botaoSalvar = formularioEvento.querySelector('[type="submit"]');
+const botaoCancelar = document.getElementById("cancelar-edicao-evento");
+const rotuloFoto = formularioEvento.querySelector('label[for="evento-foto"]');
+const rotuloFotoOriginal = rotuloFoto.textContent;
+let podePublicar = false;
+let editando = null;
 const dataCompeticao = new Intl.DateTimeFormat("pt-BR", { dateStyle: "long", timeZone: "UTC" });
 
 async function eventosApi(caminho, opcoes) {
@@ -49,6 +56,24 @@ function cartaoEvento(item) {
         link.textContent = "Ver competição";
         texto.append(link);
     }
+    if (podePublicar) {
+        const acoes = document.createElement("div");
+        acoes.className = "evento-acoes";
+        const editar = document.createElement("button");
+        editar.type = "button";
+        editar.className = "btn-smais";
+        editar.textContent = "Editar";
+        editar.addEventListener("click", () => abrirEdicao(item));
+        const excluir = document.createElement("button");
+        excluir.type = "button";
+        excluir.className = "btn-smais";
+        excluir.textContent = "Excluir";
+        const estado = document.createElement("p");
+        estado.setAttribute("role", "status");
+        excluir.addEventListener("click", () => excluirEvento(item, excluir, estado));
+        acoes.append(editar, excluir);
+        texto.append(acoes, estado);
+    }
     cartao.append(texto);
     return cartao;
 }
@@ -80,7 +105,6 @@ for (const tipo of ["competicao", "publicacao"]) {
         }
     };
     mais.addEventListener("click", () => carregarEventos[tipo]());
-    void carregarEventos[tipo](true);
 }
 
 function atualizarCamposEvento() {
@@ -89,29 +113,86 @@ function atualizarCamposEvento() {
     camposCompeticao.disabled = !competicao;
 }
 
+function limparFormulario() {
+    editando = null;
+    formularioEvento.reset();
+    tipoEvento.disabled = false;
+    secaoFormulario.querySelector("summary").textContent = "Nova publicação";
+    botaoSalvar.textContent = "Publicar";
+    botaoCancelar.hidden = true;
+    rotuloFoto.textContent = rotuloFotoOriginal;
+    feedbackEvento.textContent = "";
+    atualizarCamposEvento();
+}
+
+function abrirEdicao(item) {
+    if (botaoSalvar.disabled) return;
+    limparFormulario();
+    editando = item;
+    tipoEvento.value = item.tipo;
+    tipoEvento.disabled = true;
+    for (const nome of ["titulo", "descricao", "data_evento", "link"]) {
+        formularioEvento.elements.namedItem(nome).value = item[nome] ?? "";
+    }
+    atualizarCamposEvento();
+    secaoFormulario.open = true;
+    secaoFormulario.querySelector("summary").textContent = "Editar publicação";
+    botaoSalvar.textContent = "Salvar alterações";
+    botaoCancelar.hidden = false;
+    if (item.foto) rotuloFoto.textContent = `${rotuloFotoOriginal}. Deixe em branco para manter a foto atual.`;
+    formularioEvento.elements.namedItem("titulo").focus();
+}
+
+const headersEquipe = { Authorization: `Bearer ${tokenEquipe}` };
+
+async function excluirEvento(item, botao, estado) {
+    if (!window.confirm(`Excluir “${item.titulo}”? Esta ação é permanente.`)) return;
+    botao.disabled = true;
+    estado.textContent = "Excluindo…";
+    try {
+        await eventosApi(`/eventos/${item.id}`, { method: "DELETE", headers: headersEquipe });
+        if (editando?.id === item.id) limparFormulario();
+        await carregarEventos[item.tipo](true);
+    } catch (erro) {
+        estado.textContent = erro.message;
+        botao.disabled = false;
+    }
+}
+
 tipoEvento.addEventListener("change", atualizarCamposEvento);
+botaoCancelar.addEventListener("click", limparFormulario);
+for (const carregar of Object.values(carregarEventos)) void carregar(true);
 if (tokenEquipe) {
-    const headers = { Authorization: `Bearer ${tokenEquipe}` };
-    eventosApi("/auth/me", { headers }).then(usuario => {
-        document.getElementById("publicar-evento").hidden = !["admin", "instrutor"].includes(usuario.papel);
+    eventosApi("/auth/me", { headers: headersEquipe }).then(usuario => {
+        podePublicar = ["admin", "instrutor"].includes(usuario.papel);
+        secaoFormulario.hidden = !podePublicar;
+        if (podePublicar) {
+            for (const carregar of Object.values(carregarEventos)) void carregar(true);
+        }
     }).catch(() => {});
     formularioEvento.addEventListener("submit", async evento => {
         evento.preventDefault();
-        const botao = formularioEvento.querySelector('[type="submit"]');
-        botao.disabled = true;
-        feedbackEvento.textContent = "Publicando…";
+        const item = editando;
+        botaoSalvar.disabled = true;
+        botaoCancelar.disabled = true;
+        feedbackEvento.textContent = item ? "Salvando…" : "Publicando…";
         const body = new FormData(formularioEvento);
+        body.set("tipo", tipoEvento.value);
         if (!body.get("foto").size) body.delete("foto");
         try {
-            const salvo = await eventosApi("/eventos", { method: "POST", headers, body });
-            formularioEvento.reset();
-            atualizarCamposEvento();
-            feedbackEvento.textContent = "Publicado com sucesso.";
+            const salvo = await eventosApi(item ? `/eventos/${item.id}` : "/eventos", {
+                method: item ? "PUT" : "POST",
+                headers: headersEquipe,
+                body,
+            });
+            limparFormulario();
+            feedbackEvento.textContent = item ? "Alterações salvas." : "Publicado com sucesso.";
             void carregarEventos[salvo.tipo](true);
         } catch (erro) {
             feedbackEvento.textContent = erro.message;
         } finally {
-            botao.disabled = false;
+            botaoSalvar.disabled = false;
+            botaoCancelar.disabled = false;
         }
     });
 }
