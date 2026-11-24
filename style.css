@@ -2101,8 +2101,9 @@ align-self: start;
     align-items: center;
 }
 
-.evento-cartao .evento-acoes > .btn-smais {
-    padding: 0.65rem 1.5rem;
-    font-size: 1.5rem;
-    min-height: 3.6rem;
+.evento-cartao :is(.evento-acoes, .evento-conteudo) > .btn-smais {
+    padding: 0.5rem 1.15rem;
+    font-size: 1.4rem;
+    min-height: 3.4rem;
+    align-content: center;
 }
