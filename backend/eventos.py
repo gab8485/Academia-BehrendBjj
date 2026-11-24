@@ -13,6 +13,8 @@ from sqlalchemy.orm import Session, deferred
 from backend.database import Base, get_db
 from backend.security import require_roles
 
+acesso_equipe = Depends(require_roles("admin", "instrutor"))
+
 router = APIRouter(prefix="/api/v1/eventos", tags=["Eventos"])
 MAX_FOTO = 8 * 1024 * 1024
 TAMANHO_PAGINA = 20
@@ -43,7 +45,7 @@ def dados_publicos(item: Publicacao) -> dict:
         "descricao": item.descricao,
         "data_evento": item.data_evento,
         "link": item.link,
-        "foto": f"/eventos/{item.id}/foto" if item.tem_foto else None,
+        "foto": f"/eventos/{item.id}/foto?v=2" if item.tem_foto else None,
     }
 
 
@@ -88,18 +90,16 @@ def obter_foto(publicacao_id: int, db: Session = Depends(get_db)):
     foto = db.query(Publicacao.foto).filter_by(id=publicacao_id).scalar()
     if foto is None:
         raise HTTPException(404, "Foto não encontrada.")
-    return Response(foto, media_type="image/jpeg", headers={"Cache-Control": "public, max-age=3600"})
+    return Response(foto, media_type="image/jpeg", headers={"Cache-Control": "no-store"})
 
 
-@router.post("", status_code=201, dependencies=[Depends(require_roles("admin", "instrutor"))])
-def publicar(
+def ler_publicacao(
     tipo: Annotated[Literal["competicao", "publicacao"], Form()],
     titulo: Annotated[str, Form(max_length=120)],
     descricao: Annotated[str, Form(max_length=2000)],
     foto: UploadFile | None = None,
     data_evento: Annotated[date | None, Form()] = None,
     link: Annotated[str | None, Form(max_length=2083)] = None,
-    db: Session = Depends(get_db),
 ):
     titulo, descricao = titulo.strip(), descricao.strip()
     if not titulo or not descricao:
@@ -115,12 +115,50 @@ def publicar(
             raise HTTPException(422, "Informe um link válido que comece com http:// ou https://.") from erro
     else:
         data_evento, link = None, None
-    foto_bytes = preparar_foto(foto) if foto else None
-    item = Publicacao(
-        tipo=tipo, titulo=titulo, descricao=descricao, data_evento=data_evento,
-        link=link, foto=foto_bytes, tem_foto=foto_bytes is not None,
-    )
+    item = Publicacao(tipo=tipo, titulo=titulo, descricao=descricao, data_evento=data_evento, link=link)
+    if foto is not None:
+        item.foto = preparar_foto(foto)
+        item.tem_foto = True
+    return item
+
+
+@router.post("", status_code=201, dependencies=[acesso_equipe])
+def publicar(item: Annotated[Publicacao, Depends(ler_publicacao)], db: Session = Depends(get_db)):
     db.add(item)
+    db.flush()
+    dados = dados_publicos(item)
     db.commit()
-    db.refresh(item)
-    return dados_publicos(item)
+    return dados
+
+
+@router.put("/{publicacao_id}", dependencies=[acesso_equipe])
+def editar(
+    publicacao_id: int,
+    novos_dados: Annotated[Publicacao, Depends(ler_publicacao)],
+    db: Session = Depends(get_db),
+):
+    item = db.get(Publicacao, publicacao_id, with_for_update=True)
+    if item is None:
+        raise HTTPException(404, "Publicação não encontrada.")
+    if item.tipo != novos_dados.tipo:
+        raise HTTPException(422, "O tipo da publicação deve permanecer o mesmo.")
+    item.titulo = novos_dados.titulo
+    item.descricao = novos_dados.descricao
+    item.data_evento = novos_dados.data_evento
+    item.link = novos_dados.link
+    if novos_dados.tem_foto:
+        item.foto = novos_dados.foto
+        item.tem_foto = True
+    db.flush()
+    dados = dados_publicos(item)
+    db.commit()
+    return dados
+
+
+@router.delete("/{publicacao_id}", dependencies=[acesso_equipe])
+def excluir(publicacao_id: int, db: Session = Depends(get_db)):
+    removidos = db.query(Publicacao).filter_by(id=publicacao_id).delete()
+    if not removidos:
+        raise HTTPException(404, "Publicação não encontrada.")
+    db.commit()
+    return {"id": publicacao_id}

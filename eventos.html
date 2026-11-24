@@ -67,7 +67,10 @@
                 </fieldset>
                 <label for="evento-foto">Foto (JPEG, PNG ou WebP, até 8 MB)</label>
                 <input id="evento-foto" type="file" name="foto" accept="image/jpeg,image/png,image/webp">
-                <button class="btn-smais" type="submit">Publicar</button>
+                <div class="evento-acoes">
+                    <button class="btn-smais" type="submit">Publicar</button>
+                    <button id="cancelar-edicao-evento" class="btn-smais" type="button" hidden>Cancelar edição</button>
+                </div>
                 <p id="evento-feedback" role="status"></p>
             </form>
         </details>
