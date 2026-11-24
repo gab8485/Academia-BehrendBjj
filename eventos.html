@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Eventos | Behrend BJJ</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header class="header header-confirmar-aula">
+    <section class="flex">
+        <a href="index.html" class="logo">
+            <img src="./img/logoacademia1.png" alt="Logo Behrend BJJ">
+        </a>
+
+        <nav class="navbar">
+            <a href="index.html">Home</a>
+            <a href="sobre.html">Sobre</a>
+            <li class="dropdown">
+                <a href="index.html#menu">Modalidades</a>
+                <div class="dropdown-menu">
+                    <a href="jiujitsuadulto.html">Jiu Jitsu Adulto</a>
+                    <a href="jiujitsuinfantil.html">Jiu Jitsu Infantil</a>
+
+                    <a href="nogi.html">Nogi</a>
+                </div>
+            </li>
+            <a href="horarios.html">Horários</a>
+            <a href="index.html#review">Unidades</a>
+            <a href="endereço.html">Endereço</a>
+            <a href="agendamento.html">Agende sua aula experimental</a>
+            <a href="painel.html">Painel</a>
+            <a href="confirmar-aula.html">Confirmar aula</a>
+            <a href="eventos.html" aria-current="page">Eventos</a>
+        </nav>
+
+        <div>
+            <a href="agendamento.html" class="btn1">Começar agora</a>
+        </div>
+
+        <div class="icons">
+            <div class="fas fa-bars" id="menu-btn"></div>
+        </div>
+    </section>
+</header>
+
+    <main class="app-section eventos-app">
+        <h1 class="titulo-secao">Eventos e publicações</h1>
+        <details id="publicar-evento" class="app-card" hidden>
+            <summary>Nova publicação</summary>
+            <form id="form-evento" class="app-form">
+                <label for="evento-tipo">Tipo</label>
+                <select id="evento-tipo" name="tipo">
+                    <option value="competicao">Competição</option>
+                    <option value="publicacao">Publicação da academia</option>
+                </select>
+                <label for="evento-titulo">Título</label>
+                <input id="evento-titulo" name="titulo" maxlength="120" required>
+                <label for="evento-descricao">Descrição</label>
+                <textarea id="evento-descricao" name="descricao" maxlength="2000" rows="4" required></textarea>
+                <fieldset id="evento-competicao">
+                    <label for="evento-data">Data da competição</label>
+                    <input id="evento-data" type="date" name="data_evento" required>
+                    <label for="evento-link">Link oficial</label>
+                    <input id="evento-link" type="url" name="link" maxlength="2083" required>
+                </fieldset>
+                <label for="evento-foto">Foto (JPEG, PNG ou WebP, até 8 MB)</label>
+                <input id="evento-foto" type="file" name="foto" accept="image/jpeg,image/png,image/webp">
+                <button class="btn-smais" type="submit">Publicar</button>
+                <p id="evento-feedback" role="status"></p>
+            </form>
+        </details>
+
+        <section aria-labelledby="titulo-competicoes" class="eventos-secao">
+            <h2 id="titulo-competicoes">Competições</h2>
+            <p id="status-competicao" role="status"></p>
+            <div id="lista-competicao" class="eventos-lista"></div>
+            <button id="mais-competicao" type="button" class="btn-smais" hidden>Ver mais competições</button>
+        </section>
+
+        <section aria-labelledby="titulo-publicacoes" class="eventos-secao">
+            <h2 id="titulo-publicacoes">Publicações da academia</h2>
+            <p id="status-publicacao" role="status"></p>
+            <div id="lista-publicacao" class="eventos-lista"></div>
+            <button id="mais-publicacao" type="button" class="btn-smais" hidden>Ver mais publicações</button>
+        </section>
+    </main>
+    <script src="/js/script.js"></script>
+    <script src="/js/eventos.js"></script>
+</body>
+</html>

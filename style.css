@@ -2025,3 +2025,71 @@ align-self: start;
 .header.header-confirmar-aula {
     position: sticky;
 }
+
+.eventos-app [hidden] {
+    display: none;
+}
+
+.eventos-secao {
+    margin-top: 3rem;
+    padding: 0;
+}
+
+.eventos-secao h2,
+#publicar-evento summary {
+    margin-bottom: 1rem;
+    font-size: 2rem;
+}
+
+#publicar-evento summary {
+    cursor: pointer;
+}
+
+#evento-competicao {
+    display: grid;
+    gap: 0.75rem;
+    min-width: 0;
+}
+
+.eventos-lista {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 29rem), 1fr));
+    gap: 1.5rem;
+    font-size: 1.6rem;
+}
+
+.evento-cartao {
+    overflow: hidden;
+    padding: 0;
+}
+
+.evento-cartao img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: contain;
+    background: #0c0d14;
+}
+
+.evento-conteudo {
+    padding: 1.8rem;
+    overflow-wrap: anywhere;
+}
+
+.evento-conteudo :is(h3, p, time) {
+    text-transform: none;
+}
+
+.evento-conteudo p {
+    margin-top: 0.9rem;
+    white-space: pre-wrap;
+}
+
+.evento-conteudo time {
+    color: #93c5fd;
+}
+
+.eventos-secao [role="status"],
+#evento-feedback {
+    font-size: 1.5rem;
+}

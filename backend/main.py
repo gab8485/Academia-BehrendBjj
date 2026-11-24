@@ -13,6 +13,7 @@ from sqlalchemy.orm import Session
 
 from backend.database import Base, SessionLocal, engine, get_db
 from backend.models import User
+from backend.eventos import router as eventos_router
 from backend.presencas import router as presencas_router
 from backend.schemas import (
     AgendamentoCreate,
@@ -73,6 +74,7 @@ def manifesto_app():
     )
 
 app.include_router(presencas_router)
+app.include_router(eventos_router)
 
 app.add_middleware(
     CORSMiddleware,
@@ -360,6 +362,7 @@ def serve_static_pages(filename: str):
         "agendamento.html",
         "painel.html",
         "confirmar-aula.html",
+        "eventos.html",
         "style.css",
     }
     if filename == "endereco.html" and (PROJECT_ROOT / "endereço.html").exists():
