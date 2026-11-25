@@ -11,7 +11,7 @@ from pydantic import BaseModel, EmailStr, Field
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
-from backend.database import Base, SessionLocal, engine, get_db
+from backend.database import Base, SessionLocal, engine, get_db, migrar_faixa_usuarios
 from backend.models import User
 from backend.eventos import router as eventos_router
 from backend.presencas import router as presencas_router
@@ -49,6 +49,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 async def lifespan(app: FastAPI):
     """Inicializa esquema do banco de dados SQLite e garante dados iniciais (seed)."""
     Base.metadata.create_all(bind=engine)
+    migrar_faixa_usuarios()
     db = SessionLocal()
     try:
         seed_initial_data(db)

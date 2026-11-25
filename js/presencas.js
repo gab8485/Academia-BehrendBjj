@@ -168,118 +168,221 @@ function iniciarConfirmacaoAluno() {
 }
 
 function iniciarGestaoAulas() {
-    const painel = document.getElementById("gestao-confirmacoes");
-    if (!painel) return;
-
-    const selecao = document.getElementById("aula-gestao");
     const lista = document.getElementById("lista-confirmacoes");
-    const cadastro = document.getElementById("cadastro-aluno");
-    const gestao = document.getElementById("gestao-alunos");
-    const formularioAluno = document.getElementById("administrar-aluno");
-    const aluno = document.getElementById("aluno-cadastrado");
-    const novaSenha = document.getElementById("aluno-nova-senha");
-    const excluir = document.getElementById("excluir-aluno");
-    const feedbackAlunos = document.getElementById("gestao-alunos-feedback");
+    if (!lista) return;
 
-    async function carregarAlunos() {
-        aluno.replaceChildren(new Option("Selecione um aluno", ""));
-        excluir.disabled = true;
+    const feedback = document.getElementById("confirmacoes-feedback");
+    let consulta = 0;
+    let tokenAtual;
+
+    async function carregarPresencas() {
+        const token = sessionStorage.getItem("behrend_token");
+        const atual = ++consulta;
+        if (token !== tokenAtual) {
+            tokenAtual = token;
+            lista.replaceChildren();
+            feedback.textContent = token ? "Carregando presenças…" : "";
+        }
+        if (!token) return;
+
         try {
-            const alunos = await apiPresencas("/gestao/alunos");
-            for (const item of alunos) aluno.add(new Option(`${item.nome} · ${item.email}`, item.id));
-            if (!alunos.length) feedbackAlunos.textContent = "Nenhum aluno ativo cadastrado.";
+            const presencas = await apiPresencas("/gestao/presencas", {}, token);
+            if (atual !== consulta || token !== sessionStorage.getItem("behrend_token")) return;
+            const linhas = presencas.map(item => {
+                const linha = document.createElement("tr");
+                for (const valor of [
+                    item.nome, item.faixa ?? "Não informada",
+                    formatoAula.format(new Date(item.inicio)), `${item.modalidade} · ${item.formato}`
+                ]) {
+                    linha.insertCell().textContent = valor;
+                }
+                return linha;
+            });
+            lista.replaceChildren(...linhas);
+            feedback.textContent = linhas.length ? "" : "Nenhuma presença confirmada.";
         } catch (erro) {
-            feedbackAlunos.textContent = erro.message;
+            if (atual !== consulta || token !== sessionStorage.getItem("behrend_token")) return;
+            lista.replaceChildren();
+            feedback.textContent = erro.message;
+        }
+    }
+
+    document.addEventListener("painel-sessao", carregarPresencas);
+    document.addEventListener("visibilitychange", () => {
+        if (!document.hidden) void carregarPresencas();
+    });
+    window.setInterval(() => {
+        if (!document.hidden) void carregarPresencas();
+    }, 30000);
+    void carregarPresencas();
+}
+
+const faixas = [
+    "Branca", "Cinza e branca", "Cinza", "Cinza e preta",
+    "Amarela e branca", "Amarela", "Amarela e preta",
+    "Laranja e branca", "Laranja", "Laranja e preta",
+    "Verde e branca", "Verde", "Verde e preta",
+    "Azul", "Roxa", "Marrom", "Preta", "Coral", "Vermelha",
+];
+
+function iniciarGestaoContas(papel, grupo, tituloCadastro) {
+    const gestao = document.getElementById(`gestao-${grupo}`);
+    if (!gestao) return;
+
+    const cadastro = document.getElementById(`cadastro-${papel}`);
+    const selecao = document.getElementById(`${papel}-cadastrado`);
+    const feedback = document.getElementById(`cadastro-${papel}-feedback`);
+    const feedbackLista = document.getElementById(`gestao-${grupo}-feedback`);
+    const faixa = cadastro.elements.namedItem("faixa");
+    const senhaInicial = document.getElementById(`senha-inicial-${papel}`);
+    const editar = gestao.querySelector(".editar-conta");
+    const cancelar = cadastro.querySelector(".cancelar-conta");
+    const salvar = cadastro.querySelector('[type="submit"]');
+    const titulo = cadastro.querySelector("h3");
+    const excluir = gestao.querySelector("#excluir-aluno");
+    const novaSenha = gestao.querySelector("#aluno-nova-senha");
+    const caminho = `/gestao/${grupo}`;
+    let contas = [];
+    let contaEditada = null;
+    let consulta = 0;
+
+    faixa.add(new Option("Não informada", ""));
+    for (const cor of faixas) faixa.add(new Option(cor, cor));
+
+    function atualizarAcoes() {
+        editar.disabled = !selecao.value || salvar.disabled;
+        if (excluir) excluir.disabled = !selecao.value;
+    }
+
+    function modoCadastro() {
+        contaEditada = null;
+        cadastro.reset();
+        senhaInicial.hidden = false;
+        senhaInicial.disabled = false;
+        cancelar.hidden = true;
+        titulo.textContent = tituloCadastro;
+        salvar.textContent = `Criar conta de ${papel}`;
+        feedback.textContent = "";
+    }
+
+    async function carregarContas(id = "") {
+        const token = sessionStorage.getItem("behrend_token");
+        const atual = ++consulta;
+        selecao.replaceChildren(new Option(`Selecione um ${papel}`, ""));
+        contas = [];
+        atualizarAcoes();
+        feedbackLista.textContent = "";
+        try {
+            const dados = await apiPresencas(caminho, {}, token);
+            if (atual !== consulta || token !== sessionStorage.getItem("behrend_token")) return;
+            contas = dados;
+            for (const item of contas) selecao.add(new Option(`${item.nome} · ${item.email}`, item.id));
+            if (contas.some(item => String(item.id) === id)) selecao.value = id;
+            if (!contas.length) feedbackLista.textContent = `Nenhum ${papel} ativo cadastrado.`;
+            atualizarAcoes();
+        } catch (erro) {
+            if (atual === consulta && token === sessionStorage.getItem("behrend_token")) feedbackLista.textContent = erro.message;
         }
     }
 
     gestao.addEventListener("toggle", () => {
-        if (gestao.open && !gestao.hidden) void carregarAlunos();
+        if (gestao.open && !gestao.hidden) void carregarContas(selecao.value);
     });
-    aluno.addEventListener("change", () => {
-        excluir.disabled = !aluno.value;
-        novaSenha.value = "";
+    let tokenConta = sessionStorage.getItem("behrend_token");
+    document.addEventListener("painel-sessao", () => {
+        const token = sessionStorage.getItem("behrend_token");
+        if (token === tokenConta) return;
+        tokenConta = token;
+        gestao.open = false;
+        consulta++;
+        modoCadastro();
+        selecao.replaceChildren(new Option(`Selecione um ${papel}`, ""));
+        contas = [];
+        feedbackLista.textContent = "";
+        if (novaSenha) novaSenha.value = "";
+        atualizarAcoes();
+    });
+    selecao.addEventListener("change", () => {
+        atualizarAcoes();
+        if (novaSenha) novaSenha.value = "";
+    });
+    cancelar.addEventListener("click", modoCadastro);
+    editar.addEventListener("click", () => {
+        const conta = contas.find(item => String(item.id) === selecao.value);
+        if (!conta) return;
+        modoCadastro();
+        contaEditada = conta;
+        for (const campo of ["nome", "email", "faixa"]) {
+            cadastro.elements.namedItem(campo).value = conta[campo] ?? "";
+        }
+        senhaInicial.hidden = true;
+        senhaInicial.disabled = true;
+        cancelar.hidden = false;
+        titulo.textContent = `Editar ${papel}`;
+        salvar.textContent = "Salvar alterações";
+        cadastro.elements.namedItem("nome").focus();
     });
 
+    cadastro.addEventListener("submit", async evento => {
+        evento.preventDefault();
+        const token = sessionStorage.getItem("behrend_token");
+        const id = contaEditada ? String(contaEditada.id) : "";
+        const dados = Object.fromEntries(new FormData(cadastro));
+        dados.faixa = dados.faixa || null;
+        salvar.disabled = cancelar.disabled = true;
+        atualizarAcoes();
+        try {
+            const resposta = await apiPresencas(id ? `${caminho}/${id}` : caminho, {
+                method: id ? "PATCH" : "POST",
+                body: JSON.stringify(dados),
+            }, token);
+            if (token !== sessionStorage.getItem("behrend_token")) return;
+            modoCadastro();
+            feedback.textContent = resposta.mensagem;
+            if (papel === "aluno") document.dispatchEvent(new Event("painel-sessao"));
+            await carregarContas(id);
+        } catch (erro) {
+            if (token === sessionStorage.getItem("behrend_token")) feedback.textContent = erro.message;
+        } finally {
+            salvar.disabled = cancelar.disabled = false;
+            atualizarAcoes();
+        }
+    });
+
+    if (papel !== "aluno") return;
+    const formularioAluno = document.getElementById("administrar-aluno");
     formularioAluno.addEventListener("submit", async evento => {
         evento.preventDefault();
         const botao = formularioAluno.querySelector('[type="submit"]');
         botao.disabled = true;
         try {
-            const dados = await apiPresencas(`/gestao/alunos/${aluno.value}/senha`, {
+            const dados = await apiPresencas(`/gestao/alunos/${selecao.value}/senha`, {
                 method: "PATCH", body: JSON.stringify({ senha: novaSenha.value })
             });
             novaSenha.value = "";
-            feedbackAlunos.textContent = dados.mensagem;
+            feedbackLista.textContent = dados.mensagem;
         } catch (erro) {
-            feedbackAlunos.textContent = erro.message;
+            feedbackLista.textContent = erro.message;
         } finally {
             botao.disabled = false;
         }
     });
 
     excluir.addEventListener("click", async () => {
-        if (!aluno.value || !window.confirm(`Remover o acesso de ${aluno.selectedOptions[0].text}?`)) return;
+        if (!selecao.value || !window.confirm(`Remover o acesso de ${selecao.selectedOptions[0].text}?`)) return;
         excluir.disabled = true;
         try {
-            const dados = await apiPresencas(`/gestao/alunos/${aluno.value}`, { method: "DELETE" });
+            const dados = await apiPresencas(`/gestao/alunos/${selecao.value}`, { method: "DELETE" });
             novaSenha.value = "";
-            await carregarAlunos();
-            feedbackAlunos.textContent = dados.mensagem;
+            await carregarContas();
+            document.dispatchEvent(new Event("painel-sessao"));
+            feedbackLista.textContent = dados.mensagem;
         } catch (erro) {
-            feedbackAlunos.textContent = erro.message;
-            excluir.disabled = !aluno.value;
+            feedbackLista.textContent = erro.message;
+            excluir.disabled = !selecao.value;
         }
     });
 
-    painel.addEventListener("toggle", async () => {
-        if (!painel.open) return;
-        selecao.replaceChildren(new Option("Selecione uma aula", ""));
-        lista.replaceChildren();
-        try {
-            const aulas = await apiPresencas("/gestao/aulas");
-            for (const aula of aulas) selecao.add(new Option(descricaoAula(aula), aula.id));
-        } catch (erro) {
-            lista.textContent = erro.message;
-        }
-    });
-
-    selecao.addEventListener("change", async () => {
-        const aula = selecao.value;
-        lista.replaceChildren();
-        if (!aula) return;
-        try {
-            const respostas = await apiPresencas(`/gestao/aulas/${aula}/confirmacoes`);
-            if (selecao.value !== aula) return;
-            if (!respostas.length) lista.textContent = "Ainda não há confirmações.";
-            for (const item of respostas) {
-                const linha = document.createElement("li");
-                linha.textContent = `${item.nome} · ${textoResposta(item.resposta)}`;
-                lista.append(linha);
-            }
-        } catch (erro) {
-            if (selecao.value === aula) lista.textContent = erro.message;
-        }
-    });
-
-    cadastro.addEventListener("submit", async (evento) => {
-        evento.preventDefault();
-        const botao = cadastro.querySelector("button");
-        const feedback = document.getElementById("cadastro-aluno-feedback");
-        botao.disabled = true;
-        try {
-            const dados = await apiPresencas("/gestao/alunos", {
-                method: "POST", body: JSON.stringify(Object.fromEntries(new FormData(cadastro)))
-            });
-            cadastro.reset();
-            feedback.textContent = dados.mensagem;
-            await carregarAlunos();
-        } catch (erro) {
-            feedback.textContent = erro.message;
-        } finally {
-            botao.disabled = false;
-        }
-    });
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -297,4 +400,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     iniciarConfirmacaoAluno();
     iniciarGestaoAulas();
+    iniciarGestaoContas("aluno", "alunos", "Cadastrar aluno");
+    iniciarGestaoContas("instrutor", "instrutores", "Adicionar instrutor");
 });

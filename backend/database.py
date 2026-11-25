@@ -1,6 +1,6 @@
 """Configuração de conexão e sessão do banco de dados com SQLAlchemy."""
 import os
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, inspect
 from sqlalchemy.engine import make_url
 from sqlalchemy.orm import declarative_base, sessionmaker
 
@@ -21,3 +21,15 @@ def get_db():
         yield db
     finally:
         db.close()
+
+
+def migrar_faixa_usuarios():
+    """Adiciona a faixa às contas de bancos criados antes deste campo."""
+    with engine.begin() as conexao:
+        if conexao.dialect.name == "postgresql":
+            conexao.exec_driver_sql("ALTER TABLE users ADD COLUMN IF NOT EXISTS faixa VARCHAR(40)")
+        else:
+            conexao.exec_driver_sql("BEGIN IMMEDIATE")
+            colunas = inspect(conexao).get_columns("users")
+            if not any(coluna["name"] == "faixa" for coluna in colunas):
+                conexao.exec_driver_sql("ALTER TABLE users ADD COLUMN faixa VARCHAR(40)")

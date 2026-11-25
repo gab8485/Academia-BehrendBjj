@@ -134,12 +134,24 @@
     <!-- Área Restrita do Dashboard -->
     <div id="painel-dashboard" style="display:none;">
         <a class="btn-smais" href="eventos.html">Publicar em Eventos</a>
-        <details id="gestao-confirmacoes" class="app-card">
-            <summary>Confirmações de aulas</summary>
-            <label for="aula-gestao">Escolha uma aula</label>
-            <select id="aula-gestao"><option value="">Selecione uma aula</option></select>
-            <ul id="lista-confirmacoes" aria-live="polite"></ul>
-        </details>
+        <section id="gestao-confirmacoes" class="app-card" aria-labelledby="titulo-confirmacoes">
+            <h2 id="titulo-confirmacoes">Presenças confirmadas</h2>
+            <div class="table-responsive">
+                <table class="app-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Aluno</th>
+                            <th scope="col">Faixa</th>
+                            <th scope="col">Dia e horário</th>
+                            <th scope="col">Aula</th>
+                        </tr>
+                    </thead>
+                    <tbody id="lista-confirmacoes"></tbody>
+                </table>
+            </div>
+            <p id="confirmacoes-feedback" role="status"></p>
+        </section>
+
         <details id="gestao-alunos" class="app-card" hidden>
             <summary>Alunos cadastrados</summary>
             <form id="cadastro-aluno" class="app-form" hidden>
@@ -148,27 +160,62 @@
                 <input id="cadastro-aluno-nome" name="nome" maxlength="120" required>
                 <label for="cadastro-aluno-email">E-mail</label>
                 <input id="cadastro-aluno-email" name="email" type="email" maxlength="150" required>
-                <label for="cadastro-aluno-senha">Senha inicial</label>
-                <input id="cadastro-aluno-senha" name="senha" type="password" minlength="12" maxlength="128" autocomplete="new-password" required>
-                <button class="btn-mini alternar-senha" data-alternar-senha type="button" aria-controls="cadastro-aluno-senha">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                        <path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7Z"/>
-                        <circle cx="12" cy="12" r="3"/>
-                    </svg>
-                    <span>Mostrar senha</span>
-                </button>
+                <label for="cadastro-aluno-faixa">Faixa</label>
+                <select id="cadastro-aluno-faixa" name="faixa"></select>
+                <fieldset id="senha-inicial-aluno">
+                    <label for="cadastro-aluno-senha">Senha inicial</label>
+                    <input id="cadastro-aluno-senha" name="senha" type="password" minlength="12" maxlength="128" autocomplete="new-password" required>
+                    <button class="btn-mini alternar-senha" data-alternar-senha type="button" aria-controls="cadastro-aluno-senha">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                            <path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7Z"/>
+                            <circle cx="12" cy="12" r="3"/>
+                        </svg>
+                        <span>Mostrar senha</span>
+                    </button>
+                </fieldset>
                 <button type="submit" class="btn-smais">Criar conta de aluno</button>
+                <button type="button" class="btn-mini btn-cancel cancelar-conta" hidden>Cancelar edição</button>
                 <p id="cadastro-aluno-feedback" role="status"></p>
             </form>
             <form id="administrar-aluno" class="app-form">
                 <label for="aluno-cadastrado">Escolha pelo nome ou e-mail</label>
                 <select id="aluno-cadastrado" required></select>
+                <button type="button" class="btn-mini btn-confirm editar-conta" disabled>Editar aluno</button>
                 <label for="aluno-nova-senha">Nova senha do aluno</label>
                 <input id="aluno-nova-senha" type="password" autocomplete="new-password" minlength="12" maxlength="128" required>
                 <button class="btn-mini" type="submit">Redefinir senha</button>
-                <button class="btn-mini btn-delete" id="excluir-aluno" type="button">Excluir aluno</button>
+                <button class="btn-mini btn-delete" id="excluir-aluno" type="button" disabled>Excluir aluno</button>
                 <p id="gestao-alunos-feedback" role="status"></p>
             </form>
+        </details>
+
+        <details id="gestao-instrutores" class="app-card" hidden>
+            <summary>Instrutores cadastrados</summary>
+            <form id="cadastro-instrutor" class="app-form">
+                <h3>Adicionar instrutor</h3>
+                <label for="cadastro-instrutor-nome">Nome</label>
+                <input id="cadastro-instrutor-nome" name="nome" maxlength="120" required>
+                <label for="cadastro-instrutor-email">E-mail</label>
+                <input id="cadastro-instrutor-email" name="email" type="email" maxlength="150" required>
+                <label for="cadastro-instrutor-faixa">Faixa</label>
+                <select id="cadastro-instrutor-faixa" name="faixa"></select>
+                <fieldset id="senha-inicial-instrutor">
+                    <label for="cadastro-instrutor-senha">Senha inicial</label>
+                    <input id="cadastro-instrutor-senha" name="senha" type="password" minlength="12" maxlength="128" autocomplete="new-password" required>
+                    <button class="btn-mini alternar-senha" data-alternar-senha type="button" aria-controls="cadastro-instrutor-senha">
+                        <span>Mostrar senha</span>
+                    </button>
+                </fieldset>
+                <button type="submit" class="btn-smais">Criar conta de instrutor</button>
+                <button type="button" class="btn-mini btn-cancel cancelar-conta" hidden>Cancelar edição</button>
+                <p id="cadastro-instrutor-feedback" role="status"></p>
+            </form>
+            <div class="app-form">
+                <label for="instrutor-cadastrado">Escolha pelo nome ou e-mail</label>
+                <select id="instrutor-cadastrado"></select>
+                <button type="button" class="btn-mini btn-confirm editar-conta" disabled>Editar instrutor</button>
+                <p id="gestao-instrutores-feedback" role="status"></p>
+            </div>
         </details>
 
         <div id="rbac-role-notice" style="display:none;margin-bottom:2rem;"></div>
