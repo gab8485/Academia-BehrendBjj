@@ -1992,7 +1992,8 @@ align-self: start;
     display: none;
 }
 
-#gestao-alunos summary {
+#gestao-alunos > summary,
+#gestao-instrutores > summary {
     font-size: 1.8rem;
     cursor: pointer;
 }
