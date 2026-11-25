@@ -2181,3 +2181,13 @@ align-self: start;
 .faixa-cor[hidden] {
     display: none;
 }
+
+.mudar-senha-conta > summary {
+    cursor: pointer;
+    font-size: 1.5rem;
+    color: #93c5fd;
+}
+
+.form-nova-senha > button {
+    margin-top: 0.8rem;
+}

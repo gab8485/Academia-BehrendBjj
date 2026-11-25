@@ -114,7 +114,7 @@ def create_access_token(user: User) -> str:
         "iat": int(time.time()),
         "exp": int(time.time()) + TOKEN_EXPIRATION_SECONDS,
     }
-    if user.papel == "aluno":
+    if user.papel in ("aluno", "instrutor"):
         payload["versao_senha"] = versao_da_senha(user)
     header_b64 = _b64url_encode(json.dumps(header, separators=(",", ":")).encode("utf-8"))
     payload_b64 = _b64url_encode(json.dumps(payload, separators=(",", ":")).encode("utf-8"))
@@ -171,7 +171,7 @@ def get_current_user(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Usuário não encontrado ou inativo.",
         )
-    if user.papel == "aluno" and payload.get("versao_senha") != versao_da_senha(user):
+    if user.papel in ("aluno", "instrutor") and payload.get("versao_senha") != versao_da_senha(user):
         raise HTTPException(401, "Sessão expirada. Entre novamente.")
     return user
 

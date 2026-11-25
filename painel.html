@@ -178,16 +178,21 @@
                 <button type="button" class="btn-mini btn-cancel cancelar-conta">Cancelar cadastro</button>
                 <p id="cadastro-aluno-feedback" role="status"></p>
             </form>
-            <form id="administrar-aluno" class="app-form">
+            <div class="app-form">
                 <label for="aluno-cadastrado">Alunos cadastrados</label>
                 <select id="aluno-cadastrado" required></select>
                 <button type="button" class="btn-mini btn-confirm editar-conta" disabled>Editar aluno</button>
-                <label for="aluno-nova-senha">Nova senha do aluno</label>
-                <input id="aluno-nova-senha" type="password" autocomplete="new-password" minlength="12" maxlength="128" required>
-                <button class="btn-mini" type="submit">Redefinir senha</button>
-                <button class="btn-mini btn-delete" id="excluir-aluno" type="button" disabled>Excluir aluno</button>
+                <button type="button" class="btn-mini btn-delete excluir-conta" disabled>Excluir aluno</button>
+                <details class="mudar-senha-conta" hidden>
+                    <summary>Mudar senha</summary>
+                    <form class="form-nova-senha">
+                        <label for="aluno-nova-senha">Nova senha do aluno (mínimo de 12 caracteres)</label>
+                        <input id="aluno-nova-senha" name="senha" type="password" autocomplete="new-password" minlength="12" maxlength="128" required>
+                        <button type="submit" class="btn-mini btn-confirm" disabled>Salvar nova senha</button>
+                    </form>
+                </details>
                 <p id="gestao-alunos-feedback" role="status"></p>
-            </form>
+            </div>
         </details>
 
         <details id="gestao-instrutores" class="app-card painel-secao" hidden>
@@ -219,6 +224,15 @@
                 <label for="instrutor-cadastrado">Instrutores cadastrados</label>
                 <select id="instrutor-cadastrado"></select>
                 <button type="button" class="btn-mini btn-confirm editar-conta" disabled>Editar instrutor</button>
+                <button type="button" class="btn-mini btn-delete excluir-conta" disabled>Excluir instrutor</button>
+                <details class="mudar-senha-conta" hidden>
+                    <summary>Mudar senha</summary>
+                    <form class="form-nova-senha">
+                        <label for="instrutor-nova-senha">Nova senha do instrutor (mínimo de 12 caracteres)</label>
+                        <input id="instrutor-nova-senha" name="senha" type="password" autocomplete="new-password" minlength="12" maxlength="128" required>
+                        <button type="submit" class="btn-mini btn-confirm" disabled>Salvar nova senha</button>
+                    </form>
+                </details>
                 <p id="gestao-instrutores-feedback" role="status"></p>
             </div>
         </details>
