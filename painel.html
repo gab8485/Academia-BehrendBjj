@@ -237,6 +237,53 @@
             </div>
         </details>
 
+        <!-- Seção Exclusiva de Admin: Criar Nova Turma -->
+        <details id="admin-only-section" class="app-card painel-secao">
+            <summary><i class="fas fa-plus-circle" aria-hidden="true"></i> Cadastrar Nova Turma</summary>
+            <form id="form-nova-turma" class="app-form">
+                <div class="form-row-2">
+                    <div>
+                        <label for="nt-modalidade">Modalidade</label>
+                        <input type="text" id="nt-modalidade" placeholder="Ex: Defesa Pessoal Feminina" required>
+                    </div>
+                    <div>
+                        <label for="nt-publico">Público</label>
+                        <input type="text" id="nt-publico" placeholder="Ex: Adulto" required>
+                    </div>
+                </div>
+                <div class="form-row-2">
+                    <div>
+                        <label for="nt-dias">Dias da Semana</label>
+                        <input type="text" id="nt-dias" placeholder="Ex: Terça e Quinta" required>
+                    </div>
+                    <div>
+                        <label for="nt-horario">Horário</label>
+                        <input type="text" id="nt-horario" placeholder="Ex: 20:00 - 21:00" required>
+                    </div>
+                </div>
+                <div class="form-row-2">
+                    <div>
+                        <label for="nt-instrutor">Instrutor Responsável</label>
+                        <input type="text" id="nt-instrutor" placeholder="Ex: Mestre Erick Behrend" required>
+                    </div>
+                    <div>
+                        <label for="nt-capacidade">Capacidade Máxima</label>
+                        <input type="number" id="nt-capacidade" value="20" min="1" max="100" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn-smais">Salvar Nova Turma</button>
+                <p id="turma-admin-feedback" style="margin-top:1rem;font-size:1.5rem;"></p>
+            </form>
+            <form id="form-excluir-turma" class="app-form">
+                <label for="turma-cadastrada">Turmas cadastradas</label>
+                <select id="turma-cadastrada" required>
+                    <option value="">Selecione uma turma</option>
+                </select>
+                <button type="submit" class="btn-mini btn-delete" disabled>Excluir turma</button>
+                <p id="turma-exclusao-feedback" role="status"></p>
+            </form>
+        </details>
+
         <div id="rbac-role-notice" style="display:none;margin-bottom:2rem;"></div>
 
         <!-- KPIs -->
@@ -294,44 +341,6 @@
             </div>
         </details>
 
-        <!-- Seção Exclusiva de Admin: Criar Nova Turma -->
-        <details id="admin-only-section" class="app-card painel-secao">
-            <summary><i class="fas fa-plus-circle" aria-hidden="true"></i> Cadastrar Nova Turma</summary>
-            <form id="form-nova-turma" class="app-form">
-                <div class="form-row-2">
-                    <div>
-                        <label for="nt-modalidade">Modalidade</label>
-                        <input type="text" id="nt-modalidade" placeholder="Ex: Defesa Pessoal Feminina" required>
-                    </div>
-                    <div>
-                        <label for="nt-publico">Público</label>
-                        <input type="text" id="nt-publico" placeholder="Ex: Adulto" required>
-                    </div>
-                </div>
-                <div class="form-row-2">
-                    <div>
-                        <label for="nt-dias">Dias da Semana</label>
-                        <input type="text" id="nt-dias" placeholder="Ex: Terça e Quinta" required>
-                    </div>
-                    <div>
-                        <label for="nt-horario">Horário</label>
-                        <input type="text" id="nt-horario" placeholder="Ex: 20:00 - 21:00" required>
-                    </div>
-                </div>
-                <div class="form-row-2">
-                    <div>
-                        <label for="nt-instrutor">Instrutor Responsável</label>
-                        <input type="text" id="nt-instrutor" placeholder="Ex: Mestre Erick Behrend" required>
-                    </div>
-                    <div>
-                        <label for="nt-capacidade">Capacidade Máxima</label>
-                        <input type="number" id="nt-capacidade" value="20" min="1" max="100" required>
-                    </div>
-                </div>
-                <button type="submit" class="btn-smais">Salvar Nova Turma</button>
-                <p id="turma-admin-feedback" style="margin-top:1rem;font-size:1.5rem;"></p>
-            </form>
-        </details>
     </div>
 </section>
 

@@ -112,6 +112,14 @@ class AuthService:
 
 class TurmaService:
     @staticmethod
+    def desativar_turma(db: Session, turma_id: int) -> None:
+        turma = TurmaRepository.get_by_id(db, turma_id)
+        if turma is None:
+            raise HTTPException(status_code=404, detail="Turma não encontrada.")
+        turma.ativa = False
+        db.commit()
+
+    @staticmethod
     def listar_turmas(db: Session) -> List[TurmaResponse]:
         turmas = TurmaRepository.list_all(db, apenas_ativas=True)
         resultado: List[TurmaResponse] = []

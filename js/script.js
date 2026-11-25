@@ -418,6 +418,67 @@ if (btnDemoInstrutor) btnDemoInstrutor.onclick = focarCampoEmail;
         }
     });
 
+    const formExcluirTurma = document.getElementById("form-excluir-turma");
+    const turmaCadastrada = document.getElementById("turma-cadastrada");
+    const feedbackExclusao = document.getElementById("turma-exclusao-feedback");
+    const excluirTurma = formExcluirTurma.querySelector('[type="submit"]');
+    let consultaTurmas = 0;
+    let excluindoTurma = false;
+
+    async function carregarTurmasCadastradas() {
+        const consulta = ++consultaTurmas;
+        turmaCadastrada.replaceChildren(new Option("Selecione uma turma", ""));
+        excluirTurma.disabled = true;
+        feedbackExclusao.textContent = "";
+        try {
+            const resposta = await fetch(`${API_BASE}/turmas`, { cache: "no-store" });
+            if (!resposta.ok) throw new Error("Não foi possível carregar as turmas.");
+            const turmas = await resposta.json();
+            if (consulta !== consultaTurmas) return;
+            for (const turma of turmas) {
+                const rotulo = `${turma.modalidade} · ${turma.dias_semana} · ${turma.horario} · ${turma.instrutor} (#${turma.id})`;
+                turmaCadastrada.add(new Option(rotulo, turma.id));
+            }
+            if (!turmas.length) feedbackExclusao.textContent = "Nenhuma turma ativa cadastrada.";
+        } catch (erro) {
+            if (consulta === consultaTurmas) feedbackExclusao.textContent = erro.message;
+        }
+    }
+
+    formExcluirTurma.closest("details").addEventListener("toggle", evento => {
+        if (evento.currentTarget.open) void carregarTurmasCadastradas();
+    });
+    turmaCadastrada.addEventListener("change", () => {
+        excluirTurma.disabled = !turmaCadastrada.value || excluindoTurma;
+    });
+    formExcluirTurma.addEventListener("submit", async evento => {
+        evento.preventDefault();
+        const id = turmaCadastrada.value;
+        if (!id || excluindoTurma) return;
+        const nome = turmaCadastrada.selectedOptions[0].textContent;
+        if (!window.confirm(`Excluir a turma ${nome}? Os agendamentos existentes serão mantidos.`)) return;
+        const token = sessionStorage.getItem("behrend_token");
+        excluindoTurma = true;
+        excluirTurma.disabled = true;
+        try {
+            const resposta = await fetch(`${API_BASE}/turmas/${id}`, {
+                method: "DELETE",
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            if (!resposta.ok) {
+                const dados = await resposta.json().catch(() => null);
+                throw new Error(dados?.detail || "Não foi possível excluir a turma.");
+            }
+            await carregarTurmasCadastradas();
+            if (!feedbackExclusao.textContent) feedbackExclusao.textContent = "Turma excluída.";
+        } catch (erro) {
+            feedbackExclusao.textContent = erro.message;
+        } finally {
+            excluindoTurma = false;
+            excluirTurma.disabled = !turmaCadastrada.value;
+        }
+    });
+
     const formNovaTurma = document.getElementById("form-nova-turma");
     if (formNovaTurma) {
         formNovaTurma.addEventListener("submit", async (e) => {
@@ -446,6 +507,7 @@ if (btnDemoInstrutor) btnDemoInstrutor.onclick = focarCampoEmail;
                 fb.style.color = "#4ade80";
                 fb.textContent = `✅ Turma '${body.modalidade}' criada com sucesso (ID #${body.id})!`;
                 formNovaTurma.reset();
+                void carregarTurmasCadastradas();
             } catch (err) {
                 fb.style.color = "#f87171";
                 fb.textContent = `🚫 ${err.message}`;
