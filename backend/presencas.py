@@ -89,6 +89,7 @@ def listar_minhas_aulas(
 def listar_colegas_confirmados(
     aula_id: str,
     response: Response,
+    incluir_faixa: bool = False,
     aluno: User = Depends(require_roles("aluno")),
     db: Session = Depends(get_db),
 ):
@@ -96,7 +97,7 @@ def listar_colegas_confirmados(
     if not aula or not aula["aberta"]:
         raise HTTPException(404, "Aula indisponível para consulta.")
 
-    colegas = db.query(User.nome).join(
+    colegas = db.query(User.nome, User.faixa).join(
         ConfirmacaoAula, ConfirmacaoAula.aluno_id == User.id,
     ).filter(
         ConfirmacaoAula.aula_id == aula_id,
@@ -105,7 +106,9 @@ def listar_colegas_confirmados(
         User.ativo.is_(True),
     ).order_by(User.nome, User.id)
     response.headers["Cache-Control"] = "no-store"
-    return [nome.strip() for (nome,) in colegas]
+    if incluir_faixa:
+        return [{"nome": nome.strip(), "faixa": faixa} for nome, faixa in colegas]
+    return [nome.strip() for nome, _ in colegas]
 
 
 @router.put("/minhas-aulas/{aula_id}")

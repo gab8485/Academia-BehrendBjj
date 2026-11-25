@@ -71,19 +71,28 @@ function iniciarConfirmacaoAluno() {
             resumo.textContent = "Quem vai à aula?";
             const confirmados = document.createElement("p");
             confirmados.setAttribute("role", "status");
-            colegas.append(resumo, confirmados);
+            const listaColegas = document.createElement("ul");
+            listaColegas.className = "aula-confirmados-lista";
+            colegas.append(resumo, confirmados, listaColegas);
 
             let consulta = 0;
             async function carregarConfirmados() {
                 if (!colegas.open) return;
                 const atual = ++consulta;
+                listaColegas.replaceChildren();
                 confirmados.textContent = "Carregando confirmações…";
                 try {
-                    const nomes = await apiPresencas(`/minhas-aulas/${aula.id}/colegas`, {}, tokenAluno);
+                    const confirmacoes = await apiPresencas(
+                        `/minhas-aulas/${aula.id}/colegas?incluir_faixa=true`, {}, tokenAluno
+                    );
                     if (consulta !== atual) return;
-                    confirmados.textContent = nomes.length
-                        ? nomes.join(" · ")
-                        : "Ninguém confirmou presença ainda.";
+                    confirmados.textContent = confirmacoes.length ? "" : "Ninguém confirmou presença ainda.";
+                    for (const registro of confirmacoes) {
+                        const item = typeof registro === "string" ? { nome: registro } : registro;
+                        const linha = document.createElement("li");
+                        linha.append(item.nome, " · ", rotuloFaixa(item.faixa));
+                        listaColegas.append(linha);
+                    }
                 } catch (erro) {
                     if (consulta === atual) confirmados.textContent = erro.message;
                 }
@@ -190,12 +199,10 @@ function iniciarGestaoAulas() {
             if (atual !== consulta || token !== sessionStorage.getItem("behrend_token")) return;
             const linhas = presencas.map(item => {
                 const linha = document.createElement("tr");
-                for (const valor of [
-                    item.nome, item.faixa ?? "Não informada",
-                    formatoAula.format(new Date(item.inicio)), `${item.modalidade} · ${item.formato}`
-                ]) {
-                    linha.insertCell().textContent = valor;
-                }
+                linha.insertCell().textContent = item.nome;
+                linha.insertCell().append(rotuloFaixa(item.faixa));
+                linha.insertCell().textContent = formatoAula.format(new Date(item.inicio));
+                linha.insertCell().textContent = `${item.modalidade} · ${item.formato}`;
                 return linha;
             });
             lista.replaceChildren(...linhas);
@@ -217,13 +224,49 @@ function iniciarGestaoAulas() {
     void carregarPresencas();
 }
 
-const faixas = [
-    "Branca", "Cinza e branca", "Cinza", "Cinza e preta",
-    "Amarela e branca", "Amarela", "Amarela e preta",
-    "Laranja e branca", "Laranja", "Laranja e preta",
-    "Verde e branca", "Verde", "Verde e preta",
-    "Azul", "Roxa", "Marrom", "Preta", "Coral", "Vermelha",
-];
+const coresFaixas = new Map([
+    ["Branca", ["#fff"]],
+    ["Cinza e branca", ["#9ca3af", "#fff"]], ["Cinza", ["#9ca3af"]], ["Cinza e preta", ["#9ca3af", "#111"]],
+    ["Amarela e branca", ["#facc15", "#fff"]], ["Amarela", ["#facc15"]], ["Amarela e preta", ["#facc15", "#111"]],
+    ["Laranja e branca", ["#fb923c", "#fff"]], ["Laranja", ["#fb923c"]], ["Laranja e preta", ["#fb923c", "#111"]],
+    ["Verde e branca", ["#22c55e", "#fff"]], ["Verde", ["#22c55e"]], ["Verde e preta", ["#22c55e", "#111"]],
+    ["Azul", ["#3b82f6"]], ["Roxa", ["#a855f7"]], ["Marrom", ["#965d36"]], ["Preta", ["#111"]],
+    ["Coral", ["#ef4444", "#111"]], ["Vermelha", ["#ef4444"]],
+]);
+
+function aplicarCorFaixa(circulo, faixa) {
+    const cores = coresFaixas.get(faixa);
+    circulo.hidden = !cores;
+    circulo.style.background = cores?.length === 2
+        ? `linear-gradient(90deg, ${cores[0]} 50%, ${cores[1]} 50%)`
+        : (cores?.[0] ?? "");
+}
+
+function criarCirculoFaixa() {
+    const circulo = document.createElement("span");
+    circulo.className = "faixa-cor";
+    circulo.setAttribute("aria-hidden", "true");
+    return circulo;
+}
+
+function rotuloFaixa(faixa) {
+    const rotulo = document.createElement("span");
+    rotulo.className = "faixa-rotulo";
+    const circulo = criarCirculoFaixa();
+    aplicarCorFaixa(circulo, faixa);
+    rotulo.append(circulo, faixa ?? "Não informada");
+    return rotulo;
+}
+
+function adicionarCirculoAoSeletor(seletor) {
+    const linha = document.createElement("div");
+    linha.className = "faixa-seletor";
+    seletor.before(linha);
+    const circulo = criarCirculoFaixa();
+    circulo.hidden = true;
+    linha.append(circulo, seletor);
+    return circulo;
+}
 
 function iniciarGestaoContas(papel, grupo, tituloCadastro) {
     const gestao = document.getElementById(`gestao-${grupo}`);
@@ -247,16 +290,23 @@ function iniciarGestaoContas(papel, grupo, tituloCadastro) {
     let consulta = 0;
 
     faixa.add(new Option("Não informada", ""));
-    for (const cor of faixas) faixa.add(new Option(cor, cor));
+    for (const cor of coresFaixas.keys()) faixa.add(new Option(cor, cor));
+
+    const circuloFaixa = adicionarCirculoAoSeletor(faixa);
+    const circuloConta = adicionarCirculoAoSeletor(selecao);
+    faixa.addEventListener("change", () => aplicarCorFaixa(circuloFaixa, faixa.value));
 
     function atualizarAcoes() {
         editar.disabled = !selecao.value || salvar.disabled;
         if (excluir) excluir.disabled = !selecao.value;
+        const conta = contas.find(item => String(item.id) === selecao.value);
+        aplicarCorFaixa(circuloConta, conta?.faixa);
     }
 
     function modoCadastro() {
         contaEditada = null;
         cadastro.reset();
+        aplicarCorFaixa(circuloFaixa, faixa.value);
         senhaInicial.hidden = false;
         senhaInicial.disabled = false;
         cancelar.hidden = true;
@@ -276,7 +326,10 @@ function iniciarGestaoContas(papel, grupo, tituloCadastro) {
             const dados = await apiPresencas(caminho, {}, token);
             if (atual !== consulta || token !== sessionStorage.getItem("behrend_token")) return;
             contas = dados;
-            for (const item of contas) selecao.add(new Option(`${item.nome} · ${item.email}`, item.id));
+            for (const item of contas) {
+                const rotulo = `${item.nome} · ${item.faixa ?? "Faixa não informada"} · ${item.email}`;
+                selecao.add(new Option(rotulo, item.id));
+            }
             if (contas.some(item => String(item.id) === id)) selecao.value = id;
             if (!contas.length) feedbackLista.textContent = `Nenhum ${papel} ativo cadastrado.`;
             atualizarAcoes();
@@ -315,6 +368,7 @@ function iniciarGestaoContas(papel, grupo, tituloCadastro) {
         for (const campo of ["nome", "email", "faixa"]) {
             cadastro.elements.namedItem(campo).value = conta[campo] ?? "";
         }
+        aplicarCorFaixa(circuloFaixa, faixa.value);
         senhaInicial.hidden = true;
         senhaInicial.disabled = true;
         cancelar.hidden = false;

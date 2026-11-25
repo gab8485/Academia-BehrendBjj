@@ -2150,3 +2150,47 @@ align-self: start;
 #gestao-confirmacoes h2 {
     margin-bottom: 1rem;
 }
+
+.aula-confirmados-lista {
+    display: grid;
+    gap: 0.65rem;
+    padding-inline-start: 0;
+    list-style: none;
+    font-size: 1.7rem;
+    line-height: 1.4;
+    text-transform: none;
+}
+
+.aula-confirmados-lista:not(:empty) {
+    margin-top: 0.8rem;
+}
+
+.faixa-seletor,
+.faixa-rotulo {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+}
+
+.faixa-rotulo {
+    display: inline-flex;
+    vertical-align: middle;
+}
+
+.faixa-seletor > select {
+    min-width: 0;
+    flex: 1;
+}
+
+.faixa-cor {
+    display: inline-block;
+    width: 1.2rem;
+    height: 1.2rem;
+    flex: 0 0 auto;
+    border: 1px solid #94a3b8;
+    border-radius: 50%;
+}
+
+.faixa-cor[hidden] {
+    display: none;
+}
