@@ -377,6 +377,8 @@ if (btnDemoInstrutor) btnDemoInstrutor.onclick = focarCampoEmail;
         btnLogout.onclick = () => {
             sessionStorage.removeItem("behrend_token");
             sessionStorage.removeItem("behrend_user");
+            loginForm.reset();
+            formMinhaConta?.reset();
             renderPainelState();
         };
     }
