@@ -20,6 +20,7 @@ class User(Base):
     email = Column(String(150), unique=True, index=True, nullable=False)
     senha_hash = Column(String(255), nullable=False)
     papel = Column(String(30), nullable=False, default="aluno")  # admin, instrutor, aluno
+    faixa = Column(String(40), nullable=True)
     ativo = Column(Boolean, default=True, nullable=False)
     criado_em = Column(DateTime, default=utc_now, nullable=False)
 

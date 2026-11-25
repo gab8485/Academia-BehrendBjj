@@ -468,6 +468,7 @@ if (formMinhaConta) formMinhaConta.hidden = !token || !userStr;
 
     if (!token || !userStr) {
         dashboardArea.style.display = "none";
+        document.dispatchEvent(new Event("painel-sessao"));
         if (userBanner) userBanner.style.display = "none";
         return;
     }
@@ -480,10 +481,11 @@ if (formMinhaConta) formMinhaConta.hidden = !token || !userStr;
         window.location.assign("/confirmar-aula.html");
         return;
     }
-    for (const id of ["cadastro-aluno", "gestao-alunos"]) {
+    for (const id of ["cadastro-aluno", "gestao-alunos", "gestao-instrutores"]) {
         document.getElementById(id).hidden = user.papel !== "admin";
     }
     dashboardArea.style.display = "block";
+    document.dispatchEvent(new Event("painel-sessao"));
     userBanner.style.display = "flex";
     document.getElementById("logged-user-name").textContent = user.nome;
     document.getElementById("logged-user-role").textContent = user.papel.toUpperCase();

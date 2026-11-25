@@ -44,6 +44,9 @@ def seed_initial_data(db: Session) -> None:
                 default_users.append((papel.capitalize(), email, senha, papel))
 
     for nome, email, senha, papel in default_users:
+        # Contas gerenciadas pelo painel podem ter o e-mail alterado.
+        if papel != "admin" and db.query(User.id).filter_by(papel=papel).first():
+            continue
         if not UserRepository.get_by_email(db, email):
             UserRepository.create(
                 db=db,

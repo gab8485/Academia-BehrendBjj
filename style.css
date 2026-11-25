@@ -2139,3 +2139,13 @@ align-self: start;
     outline: 2px solid #93c5fd;
     outline-offset: -2px;
 }
+
+#gestao-instrutores[hidden],
+#gestao-alunos [hidden],
+#gestao-instrutores [hidden] {
+    display: none;
+}
+
+#gestao-confirmacoes h2 {
+    margin-bottom: 1rem;
+}
