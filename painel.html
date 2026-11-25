@@ -256,8 +256,8 @@
         </div>
 
         <!-- Tabela de Agendamentos Experimentais -->
-        <div class="app-card" style="margin-bottom:3rem;">
-            <h3><i class="fas fa-calendar-alt"></i> Gestão de Aulas Experimentais</h3>
+        <details class="app-card painel-secao" style="margin-bottom:3rem;">
+            <summary><i class="fas fa-calendar-alt" aria-hidden="true"></i> Gestão de Aulas Experimentais</summary>
             <div class="table-responsive">
                 <table class="app-table">
                     <thead>
@@ -273,11 +273,11 @@
                     <tbody id="tabela-agendamentos-body"></tbody>
                 </table>
             </div>
-        </div>
+        </details>
 
         <!-- Tabela de Mensagens de Contato -->
-        <div class="app-card" style="margin-bottom:3rem;">
-            <h3><i class="fas fa-envelope-open-text"></i> Mensagens do Formulário Institucional</h3>
+        <details class="app-card painel-secao" style="margin-bottom:3rem;">
+            <summary><i class="fas fa-envelope-open-text" aria-hidden="true"></i> Mensagens do Formulário Institucional</summary>
             <div class="table-responsive">
                 <table class="app-table">
                     <thead>
@@ -292,11 +292,11 @@
                     <tbody id="tabela-contatos-body"></tbody>
                 </table>
             </div>
-        </div>
+        </details>
 
         <!-- Seção Exclusiva de Admin: Criar Nova Turma -->
-        <div id="admin-only-section" class="app-card">
-            <h3><i class="fas fa-plus-circle"></i> Cadastrar Nova Turma (Exclusivo Papel <code>admin</code>)</h3>
+        <details id="admin-only-section" class="app-card painel-secao">
+            <summary><i class="fas fa-plus-circle" aria-hidden="true"></i> Cadastrar Nova Turma</summary>
             <form id="form-nova-turma" class="app-form">
                 <div class="form-row-2">
                     <div>
@@ -331,7 +331,7 @@
                 <button type="submit" class="btn-smais">Salvar Nova Turma</button>
                 <p id="turma-admin-feedback" style="margin-top:1rem;font-size:1.5rem;"></p>
             </form>
-        </div>
+        </details>
     </div>
 </section>
 
