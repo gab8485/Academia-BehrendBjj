@@ -457,8 +457,11 @@ if (btnDemoInstrutor) btnDemoInstrutor.onclick = focarCampoEmail;
 async function renderPainelState() {
     const token = sessionStorage.getItem("behrend_token");
     const userStr = sessionStorage.getItem("behrend_user");
-    const formMinhaConta = document.getElementById("form-minha-conta");
-if (formMinhaConta) formMinhaConta.hidden = !token || !userStr;
+    const minhaConta = document.getElementById("minha-conta");
+    if (minhaConta) {
+        minhaConta.hidden = !token || !userStr;
+        if (minhaConta.hidden) minhaConta.open = false;
+    }
     const dashboardArea = document.getElementById("painel-dashboard");
     const userBanner = document.getElementById("painel-user-banner");
     const rbacAlert = document.getElementById("rbac-role-notice");
