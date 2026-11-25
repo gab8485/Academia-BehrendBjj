@@ -309,7 +309,7 @@ function iniciarGestaoContas(papel, grupo, tituloCadastro) {
         aplicarCorFaixa(circuloFaixa, faixa.value);
         senhaInicial.hidden = false;
         senhaInicial.disabled = false;
-        cancelar.hidden = true;
+        cancelar.textContent = "Cancelar cadastro";
         titulo.textContent = tituloCadastro;
         salvar.textContent = `Criar conta de ${papel}`;
         feedback.textContent = "";
@@ -371,7 +371,7 @@ function iniciarGestaoContas(papel, grupo, tituloCadastro) {
         aplicarCorFaixa(circuloFaixa, faixa.value);
         senhaInicial.hidden = true;
         senhaInicial.disabled = true;
-        cancelar.hidden = false;
+        cancelar.textContent = "Cancelar edição";
         titulo.textContent = `Editar ${papel}`;
         salvar.textContent = "Salvar alterações";
         cadastro.elements.namedItem("nome").focus();
