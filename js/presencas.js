@@ -401,5 +401,5 @@ document.addEventListener("DOMContentLoaded", () => {
     iniciarConfirmacaoAluno();
     iniciarGestaoAulas();
     iniciarGestaoContas("aluno", "alunos", "Cadastrar aluno");
-    iniciarGestaoContas("instrutor", "instrutores", "Adicionar instrutor");
+    iniciarGestaoContas("instrutor", "instrutores", "Cadastrar instrutor");
 });
