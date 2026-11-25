@@ -282,8 +282,11 @@ function iniciarGestaoContas(papel, grupo, tituloCadastro) {
     const cancelar = cadastro.querySelector(".cancelar-conta");
     const salvar = cadastro.querySelector('[type="submit"]');
     const titulo = cadastro.querySelector("h3");
-    const excluir = gestao.querySelector("#excluir-aluno");
-    const novaSenha = gestao.querySelector("#aluno-nova-senha");
+    const excluir = gestao.querySelector(".excluir-conta");
+    const mudarSenha = gestao.querySelector(".mudar-senha-conta");
+    const formSenha = mudarSenha.querySelector("form");
+    const salvarSenha = formSenha.querySelector('[type="submit"]');
+    let alterandoConta = false;
     const caminho = `/gestao/${grupo}`;
     let contas = [];
     let contaEditada = null;
@@ -297,11 +300,23 @@ function iniciarGestaoContas(papel, grupo, tituloCadastro) {
     faixa.addEventListener("change", () => aplicarCorFaixa(circuloFaixa, faixa.value));
 
     function atualizarAcoes() {
-        editar.disabled = !selecao.value || salvar.disabled;
-        if (excluir) excluir.disabled = !selecao.value;
+        editar.disabled = !selecao.value || salvar.disabled || alterandoConta;
+        excluir.disabled = !selecao.value || alterandoConta;
+        salvarSenha.disabled = !selecao.value || alterandoConta;
+        mudarSenha.hidden = !selecao.value;
+        if (mudarSenha.hidden) fecharSenha();
         const conta = contas.find(item => String(item.id) === selecao.value);
         aplicarCorFaixa(circuloConta, conta?.faixa);
     }
+
+    function fecharSenha() {
+        mudarSenha.open = false;
+        formSenha.reset();
+    }
+
+    mudarSenha.addEventListener("toggle", () => {
+        if (!mudarSenha.open) formSenha.reset();
+    });
 
     function modoCadastro() {
         contaEditada = null;
@@ -352,12 +367,12 @@ function iniciarGestaoContas(papel, grupo, tituloCadastro) {
         selecao.replaceChildren(new Option(`Selecione um ${papel}`, ""));
         contas = [];
         feedbackLista.textContent = "";
-        if (novaSenha) novaSenha.value = "";
+        fecharSenha();
         atualizarAcoes();
     });
     selecao.addEventListener("change", () => {
         atualizarAcoes();
-        if (novaSenha) novaSenha.value = "";
+        fecharSenha();
     });
     cancelar.addEventListener("click", modoCadastro);
     editar.addEventListener("click", () => {
@@ -403,37 +418,48 @@ function iniciarGestaoContas(papel, grupo, tituloCadastro) {
         }
     });
 
-    if (papel !== "aluno") return;
-    const formularioAluno = document.getElementById("administrar-aluno");
-    formularioAluno.addEventListener("submit", async evento => {
+    formSenha.addEventListener("submit", async evento => {
         evento.preventDefault();
-        const botao = formularioAluno.querySelector('[type="submit"]');
-        botao.disabled = true;
+        const id = selecao.value;
+        if (!id || alterandoConta) return;
+        const token = sessionStorage.getItem("behrend_token");
+        const senha = formSenha.elements.namedItem("senha").value;
+        alterandoConta = true;
+        atualizarAcoes();
         try {
-            const dados = await apiPresencas(`/gestao/alunos/${selecao.value}/senha`, {
-                method: "PATCH", body: JSON.stringify({ senha: novaSenha.value })
-            });
-            novaSenha.value = "";
+            const dados = await apiPresencas(`${caminho}/${id}/senha`, {
+                method: "PATCH", body: JSON.stringify({ senha })
+            }, token);
+            if (token !== sessionStorage.getItem("behrend_token")) return;
+            if (selecao.value === id) fecharSenha();
             feedbackLista.textContent = dados.mensagem;
         } catch (erro) {
-            feedbackLista.textContent = erro.message;
+            if (token === sessionStorage.getItem("behrend_token")) feedbackLista.textContent = erro.message;
         } finally {
-            botao.disabled = false;
+            alterandoConta = false;
+            atualizarAcoes();
         }
     });
 
     excluir.addEventListener("click", async () => {
-        if (!selecao.value || !window.confirm(`Remover o acesso de ${selecao.selectedOptions[0].text}?`)) return;
-        excluir.disabled = true;
+        const id = selecao.value;
+        if (!id || alterandoConta || !window.confirm(`Remover o acesso de ${selecao.selectedOptions[0].text}?`)) return;
+        const token = sessionStorage.getItem("behrend_token");
+        alterandoConta = true;
+        atualizarAcoes();
         try {
-            const dados = await apiPresencas(`/gestao/alunos/${selecao.value}`, { method: "DELETE" });
-            novaSenha.value = "";
-            await carregarContas();
-            document.dispatchEvent(new Event("painel-sessao"));
+            const dados = await apiPresencas(`${caminho}/${id}`, { method: "DELETE" }, token);
+            if (token !== sessionStorage.getItem("behrend_token")) return;
+            if (String(contaEditada?.id) === id) modoCadastro();
+            await carregarContas(selecao.value === id ? "" : selecao.value);
+            if (token !== sessionStorage.getItem("behrend_token")) return;
+            if (papel === "aluno") document.dispatchEvent(new Event("painel-sessao"));
             feedbackLista.textContent = dados.mensagem;
         } catch (erro) {
-            feedbackLista.textContent = erro.message;
-            excluir.disabled = !selecao.value;
+            if (token === sessionStorage.getItem("behrend_token")) feedbackLista.textContent = erro.message;
+        } finally {
+            alterandoConta = false;
+            atualizarAcoes();
         }
     });
 

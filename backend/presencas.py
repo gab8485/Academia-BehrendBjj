@@ -224,7 +224,7 @@ def editar_conta(
     return {"mensagem": "Alterações salvas."}
 
 
-class NovaSenhaAluno(BaseModel):
+class NovaSenhaConta(BaseModel):
     senha: str = Field(min_length=12, max_length=128)
 
 
@@ -249,24 +249,26 @@ def conta_ativa(conta_id: int, papel: str, db: Session) -> User:
     return conta
 
 
-@router.patch("/gestao/alunos/{aluno_id}/senha")
-def redefinir_senha_aluno(
-    aluno_id: int,
-    dados: NovaSenhaAluno,
+@router.patch("/gestao/{grupo}/{conta_id}/senha")
+def redefinir_senha_conta(
+    grupo: GrupoContas,
+    conta_id: int,
+    dados: NovaSenhaConta,
     admin: User = Depends(require_roles("admin")),
     db: Session = Depends(get_db),
 ):
-    conta_ativa(aluno_id, "aluno", db).senha_hash = hash_password(dados.senha)
+    conta_ativa(conta_id, PAPEIS[grupo], db).senha_hash = hash_password(dados.senha)
     db.commit()
-    return {"mensagem": "Senha redefinida. O aluno pode entrar com a nova senha."}
+    return {"mensagem": "Senha redefinida. A conta já pode usar a nova senha."}
 
 
-@router.delete("/gestao/alunos/{aluno_id}")
-def desativar_aluno(
-    aluno_id: int,
+@router.delete("/gestao/{grupo}/{conta_id}")
+def desativar_conta(
+    grupo: GrupoContas,
+    conta_id: int,
     admin: User = Depends(require_roles("admin")),
     db: Session = Depends(get_db),
 ):
-    conta_ativa(aluno_id, "aluno", db).ativo = False
+    conta_ativa(conta_id, PAPEIS[grupo], db).ativo = False
     db.commit()
-    return {"mensagem": "Aluno removido da lista e acesso desativado."}
+    return {"mensagem": "Conta removida da lista e acesso desativado."}
