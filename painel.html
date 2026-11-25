@@ -99,43 +99,44 @@
             </div>
             <button type="button" id="btn-logout" class="btn-mini btn-cancel">Sair</button>
         </div>
-        <form id="form-minha-conta" class="app-form" hidden>
-    <h3>Minha conta</h3>
+        <details id="minha-conta" class="painel-secao" hidden>
+            <summary>Minha conta</summary>
+            <form id="form-minha-conta" class="app-form">
+                <label for="conta-senha-atual">Senha atual</label>
+                <input id="conta-senha-atual" type="password"
+                       autocomplete="current-password" required>
+                <button class="btn-mini alternar-senha" data-alternar-senha type="button" aria-controls="conta-senha-atual">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7Z"/>
+                        <circle cx="12" cy="12" r="3"/>
+                    </svg>
+                    <span>Mostrar senha</span>
+                </button>
 
-    <label for="conta-senha-atual">Senha atual</label>
-    <input id="conta-senha-atual" type="password"
-           autocomplete="current-password" required>
-    <button class="btn-mini alternar-senha" data-alternar-senha type="button" aria-controls="conta-senha-atual">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-            <path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7Z"/>
-            <circle cx="12" cy="12" r="3"/>
-        </svg>
-        <span>Mostrar senha</span>
-    </button>
+                <label for="conta-email">Novo e-mail (opcional)</label>
+                <input id="conta-email" type="email" autocomplete="email">
 
-    <label for="conta-email">Novo e-mail (opcional)</label>
-    <input id="conta-email" type="email" autocomplete="email">
+                <label for="conta-senha-nova">Nova senha (opcional, mínimo de 12 caracteres)</label>
+                <input id="conta-senha-nova" type="password"
+                       autocomplete="new-password" minlength="12" maxlength="256">
+                <button class="btn-mini alternar-senha" data-alternar-senha type="button" aria-controls="conta-senha-nova">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7Z"/>
+                        <circle cx="12" cy="12" r="3"/>
+                    </svg>
+                    <span>Mostrar senha</span>
+                </button>
 
-    <label for="conta-senha-nova">Nova senha (opcional, mínimo de 12 caracteres)</label>
-    <input id="conta-senha-nova" type="password"
-           autocomplete="new-password" minlength="12" maxlength="256">
-    <button class="btn-mini alternar-senha" data-alternar-senha type="button" aria-controls="conta-senha-nova">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-            <path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7Z"/>
-            <circle cx="12" cy="12" r="3"/>
-        </svg>
-        <span>Mostrar senha</span>
-    </button>
-
-    <button type="submit" class="btn-smais">Salvar alterações</button>
-</form>
-<p id="conta-feedback" role="status"></p>
+                <button type="submit" class="btn-smais">Salvar alterações</button>
+            </form>
+            <p id="conta-feedback" role="status"></p>
+        </details>
     </div>
     <!-- Área Restrita do Dashboard -->
     <div id="painel-dashboard" style="display:none;">
         <a class="btn-smais" href="eventos.html">Publicar em Eventos</a>
-        <section id="gestao-confirmacoes" class="app-card" aria-labelledby="titulo-confirmacoes">
-            <h2 id="titulo-confirmacoes">Presenças confirmadas</h2>
+        <details id="gestao-confirmacoes" class="app-card painel-secao">
+            <summary>Presenças confirmadas</summary>
             <div class="table-responsive">
                 <table class="app-table">
                     <thead>
@@ -150,9 +151,9 @@
                 </table>
             </div>
             <p id="confirmacoes-feedback" role="status"></p>
-        </section>
+        </details>
 
-        <details id="gestao-alunos" class="app-card" hidden>
+        <details id="gestao-alunos" class="app-card painel-secao" hidden>
             <summary>Cadastrar aluno</summary>
             <form id="cadastro-aluno" class="app-form" hidden>
                 <h3>Cadastrar aluno</h3>
@@ -189,7 +190,7 @@
             </form>
         </details>
 
-        <details id="gestao-instrutores" class="app-card" hidden>
+        <details id="gestao-instrutores" class="app-card painel-secao" hidden>
             <summary>Cadastrar instrutor</summary>
             <form id="cadastro-instrutor" class="app-form">
                 <h3>Cadastrar instrutor</h3>

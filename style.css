@@ -1893,18 +1893,6 @@ align-self: start;
     color: white;
 }
 
-#gestao-confirmacoes summary {
-    cursor: pointer;
-    font-size: 1.8rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
-}
-
-#gestao-confirmacoes select {
-    max-width: 100%;
-    margin: 0.8rem;
-}
-
 .aula-confirmados {
     margin-top: 0.8rem;
     font-size: 1.6rem;
@@ -1992,8 +1980,7 @@ align-self: start;
     display: none;
 }
 
-#gestao-alunos > summary,
-#gestao-instrutores > summary {
+.painel-secao > summary {
     font-size: 1.8rem;
     cursor: pointer;
 }
@@ -2147,7 +2134,7 @@ align-self: start;
     display: none;
 }
 
-#gestao-confirmacoes h2 {
+.painel-secao[open] > summary {
     margin-bottom: 1rem;
 }
 
