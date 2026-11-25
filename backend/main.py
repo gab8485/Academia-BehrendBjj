@@ -210,6 +210,16 @@ def criar_turma(
     return TurmaService.criar_turma(db, dados)
 
 
+@app.delete("/api/v1/turmas/{turma_id}", status_code=204, tags=["Turmas e Horários"])
+def excluir_turma(
+    turma_id: int,
+    db: Session = Depends(get_db),
+    admin: User = Depends(require_roles("admin")),
+):
+    """Desativa a turma e preserva seus agendamentos."""
+    TurmaService.desativar_turma(db, turma_id)
+
+
 @app.post(
     "/api/v1/agendamentos",
     response_model=AgendamentoResponse,
