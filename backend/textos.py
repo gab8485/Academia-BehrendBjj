@@ -23,7 +23,7 @@ PAGINAS = {
     "jiujitsuinfantil.html": "Jiu-Jitsu infantil", "nogi.html": "NoGi",
     "agendamento.html": "Aula experimental", "confirmar-aula.html": "Confirmar aula",
     "eventos.html": "Eventos", "painel.html": "Painel", "judoadulto.html": "Judô adulto",
-    "judoinfantil.html": "Judô infantil", "muaythay.html": "Muay Thai",
+    "judoinfantil.html": "Judô infantil",
 }
 
 
