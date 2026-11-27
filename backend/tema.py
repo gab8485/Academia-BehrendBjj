@@ -40,3 +40,10 @@ def salvar_tema(dados: CorTema, db: Session = Depends(get_db)):
     db.execute(comando.on_conflict_do_update(index_elements=["id"], set_={"cor": comando.excluded.cor}))
     db.commit()
     return CorTema(cor=cor)
+
+
+@router.delete("", response_model=CorTema, dependencies=[Depends(require_roles("admin"))])
+def restaurar_tema(db: Session = Depends(get_db)):
+    db.query(TemaSite).filter_by(id=TEMA_SITE_ID).delete()
+    db.commit()
+    return CorTema(cor=COR_PADRAO)
