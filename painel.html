@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel de Gestão (RBAC) — Behrend BJJ</title>
+    <title data-texto="title-painel-de-gestao-rbac-behrend-bjj-1">Painel de Gestão (RBAC) — Behrend BJJ</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -17,27 +17,27 @@
         </a>
 
         <nav class="navbar">
-            <a href="index.html">Home</a>
-            <a href="sobre.html">Sobre</a>
+            <a href="index.html" data-texto="a-home-1">Home</a>
+            <a href="sobre.html" data-texto="a-sobre-1">Sobre</a>
             <li class="dropdown">
-                <a href="index.html#menu">Modalidades</a>
+                <a href="index.html#menu" data-texto="a-modalidades-1">Modalidades</a>
                 <div class="dropdown-menu">
-                    <a href="jiujitsuadulto.html">Jiu Jitsu Adulto</a>
-                    <a href="jiujitsuinfantil.html">Jiu Jitsu Infantil</a>
+                    <a href="jiujitsuadulto.html" data-texto="a-jiu-jitsu-adulto-1">Jiu Jitsu Adulto</a>
+                    <a href="jiujitsuinfantil.html" data-texto="a-jiu-jitsu-infantil-1">Jiu Jitsu Infantil</a>
 
-                    <a href="nogi.html">Nogi</a>
+                    <a href="nogi.html" data-texto="a-nogi-1">Nogi</a>
                 </div>
             </li>
-            <a href="horarios.html">Horários</a>
-            <a href="index.html#review">Unidades</a>
-            <a href="endereço.html">Endereço</a>
-            <a href="agendamento.html">Agende sua aula experimental</a>
-            <a href="painel.html">Painel</a>
-            <a href="confirmar-aula.html">Confirmar aula</a>
+            <a href="horarios.html" data-texto="a-horarios-1">Horários</a>
+            <a href="index.html#review" data-texto="a-unidades-1">Unidades</a>
+            <a href="endereço.html" data-texto="a-endereco-1">Endereço</a>
+            <a href="agendamento.html" data-texto="a-agende-sua-aula-experimental-1">Agende sua aula experimental</a>
+            <a href="painel.html" data-texto="a-painel-1">Painel</a>
+            <a href="confirmar-aula.html" data-texto="a-confirmar-aula-1">Confirmar aula</a>
         </nav>
 
         <div>
-            <a href="agendamento.html" class="btn1">Começar agora</a>
+            <a href="agendamento.html" class="btn1" data-texto="a-comecar-agora-1">Começar agora</a>
         </div>
 
         <div class="icons">
@@ -47,23 +47,23 @@
 </header>
 
 <section class="app-section" style="padding-top: 12rem;">
-    <h1 class="heading">Painel de Gestão <span></span></h1>
+    <h1 class="heading" data-texto="h1-painel-de-gestao-1">Painel de Gestão <span></span></h1>
     <p class="section-subtitle">
     
     </p>
 
     <!-- Card de Login e Seleção Rápida de Papel para Demonstração -->
     <div class="app-card" style="max-width:750px;margin:0 auto 3rem auto;">
-        <h3><i class="fas fa-lock"></i> Entrar no painel</h3>
-        <p style="font-size:1.4rem;color:#ccc;margin-bottom:1.5rem;">
+        <h3 data-texto="h3-entrar-no-painel-1"><i class="fas fa-lock"></i> Entrar no painel</h3>
+        <p style="font-size:1.4rem;color:#ccc;margin-bottom:1.5rem;" data-texto="p-entre-com-seu-e-mail-e-senha-de-administrador-ou-1">
             Entre com seu e-mail e senha de administrador ou instrutor.
         </p>
 
         <div class="demo-roles-bar">
-            <button type="button" id="btn-demo-admin" class="btn-role role-admin">
+            <button type="button" id="btn-demo-admin" class="btn-role role-admin" data-texto="button-preencher-admin-acesso-total-1">
                 <i class="fas fa-crown"></i> Preencher Admin (Acesso Total)
             </button>
-            <button type="button" id="btn-demo-instrutor" class="btn-role role-instrutor">
+            <button type="button" id="btn-demo-instrutor" class="btn-role role-instrutor" data-texto="button-preencher-instrutor-operacional-1">
                 <i class="fas fa-user-check"></i> Preencher Instrutor (Operacional)
             </button>
         </div>
@@ -71,38 +71,38 @@
         <form id="form-login-rbac" class="app-form" autocomplete="off">
             <div class="form-row-2">
                 <div>
-                    <label for="login-email">E-mail Corporativo</label>
-                <input type="email" id="login-email" placeholder="Digite seu e-mail" required>
+                    <label for="login-email" data-texto="label-e-mail-corporativo-1">E-mail Corporativo</label>
+                <input type="email" id="login-email" placeholder="Digite seu e-mail" required data-texto="input-digite-seu-e-mail-1">
                 </div>
                 <div>
-                    <label for="login-senha">Senha</label>
-                    <input type="password" id="login-senha" placeholder="Digite sua senha" required>
+                    <label for="login-senha" data-texto="label-senha-1">Senha</label>
+                    <input type="password" id="login-senha" placeholder="Digite sua senha" required data-texto="input-digite-sua-senha-1">
                     <button class="btn-mini alternar-senha" data-alternar-senha type="button" aria-controls="login-senha">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                             <path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7Z"/>
                             <circle cx="12" cy="12" r="3"/>
                         </svg>
-                        <span>Mostrar senha</span>
+                        <span data-texto="span-mostrar-senha-1">Mostrar senha</span>
                     </button>
                 </div>
             </div>
-            <button type="submit" class="btn-smais" style="width:100%;margin-top:1rem;">
+            <button type="submit" class="btn-smais" style="width:100%;margin-top:1rem;" data-texto="button-entrar-1">
                 Entrar 
             </button>
             <p id="login-feedback" style="margin-top:1rem;font-size:1.5rem;"></p>
         </form>
 
         <div id="painel-user-banner" class="user-banner" style="display:none;">
-            <div>
+            <div data-texto="div-logado-como-1">
                 Logado como: <strong id="logged-user-name"></strong>
                 <span id="logged-user-role" class="role-badge"></span>
             </div>
-            <button type="button" id="btn-logout" class="btn-mini btn-cancel">Sair</button>
+            <button type="button" id="btn-logout" class="btn-mini btn-cancel" data-texto="button-sair-1">Sair</button>
         </div>
         <details id="minha-conta" class="painel-secao" hidden>
-            <summary>Minha conta</summary>
+            <summary data-texto="summary-minha-conta-1">Minha conta</summary>
             <form id="form-minha-conta" class="app-form">
-                <label for="conta-senha-atual">Senha atual</label>
+                <label for="conta-senha-atual" data-texto="label-senha-atual-1">Senha atual</label>
                 <input id="conta-senha-atual" type="password"
                        autocomplete="current-password" required>
                 <button class="btn-mini alternar-senha" data-alternar-senha type="button" aria-controls="conta-senha-atual">
@@ -110,13 +110,13 @@
                         <path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7Z"/>
                         <circle cx="12" cy="12" r="3"/>
                     </svg>
-                    <span>Mostrar senha</span>
+                    <span data-texto="span-mostrar-senha-2">Mostrar senha</span>
                 </button>
 
-                <label for="conta-email">Novo e-mail (opcional)</label>
+                <label for="conta-email" data-texto="label-novo-e-mail-opcional-1">Novo e-mail (opcional)</label>
                 <input id="conta-email" type="email" autocomplete="email">
 
-                <label for="conta-senha-nova">Nova senha (opcional, mínimo de 12 caracteres)</label>
+                <label for="conta-senha-nova" data-texto="label-nova-senha-opcional-minimo-de-12-caracteres-1">Nova senha (opcional, mínimo de 12 caracteres)</label>
                 <input id="conta-senha-nova" type="password"
                        autocomplete="new-password" minlength="12" maxlength="256">
                 <button class="btn-mini alternar-senha" data-alternar-senha type="button" aria-controls="conta-senha-nova">
@@ -124,27 +124,27 @@
                         <path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7Z"/>
                         <circle cx="12" cy="12" r="3"/>
                     </svg>
-                    <span>Mostrar senha</span>
+                    <span data-texto="span-mostrar-senha-3">Mostrar senha</span>
                 </button>
 
-                <button type="submit" class="btn-smais">Salvar alterações</button>
+                <button type="submit" class="btn-smais" data-texto="button-salvar-alteracoes-1">Salvar alterações</button>
             </form>
             <p id="conta-feedback" role="status"></p>
         </details>
     </div>
     <!-- Área Restrita do Dashboard -->
     <div id="painel-dashboard" style="display:none;">
-        <a class="btn-smais" href="eventos.html">Publicar em Eventos</a>
+        <a class="btn-smais" href="eventos.html" data-texto="a-publicar-em-eventos-1">Publicar em Eventos</a>
         <details id="gestao-confirmacoes" class="app-card painel-secao">
-            <summary>Presenças confirmadas</summary>
+            <summary data-texto="summary-presencas-confirmadas-1">Presenças confirmadas</summary>
             <div class="table-responsive">
                 <table class="app-table">
                     <thead>
                         <tr>
-                            <th scope="col">Aluno</th>
-                            <th scope="col">Faixa</th>
-                            <th scope="col">Dia e horário</th>
-                            <th scope="col">Aula</th>
+                            <th scope="col" data-texto="th-aluno-1">Aluno</th>
+                            <th scope="col" data-texto="th-faixa-1">Faixa</th>
+                            <th scope="col" data-texto="th-dia-e-horario-1">Dia e horário</th>
+                            <th scope="col" data-texto="th-aula-1">Aula</th>
                         </tr>
                     </thead>
                     <tbody id="lista-confirmacoes"></tbody>
@@ -154,41 +154,41 @@
         </details>
 
         <details id="gestao-alunos" class="app-card painel-secao" hidden>
-            <summary>Cadastrar aluno</summary>
+            <summary data-texto="summary-cadastrar-aluno-1">Cadastrar aluno</summary>
             <form id="cadastro-aluno" class="app-form" hidden>
-                <h3>Cadastrar aluno</h3>
-                <label for="cadastro-aluno-nome">Nome</label>
+                <h3 data-texto="h3-cadastrar-aluno-1">Cadastrar aluno</h3>
+                <label for="cadastro-aluno-nome" data-texto="label-nome-1">Nome</label>
                 <input id="cadastro-aluno-nome" name="nome" maxlength="120" required>
-                <label for="cadastro-aluno-email">E-mail</label>
+                <label for="cadastro-aluno-email" data-texto="label-e-mail-1">E-mail</label>
                 <input id="cadastro-aluno-email" name="email" type="email" maxlength="150" required>
-                <label for="cadastro-aluno-faixa">Faixa</label>
+                <label for="cadastro-aluno-faixa" data-texto="label-faixa-1">Faixa</label>
                 <select id="cadastro-aluno-faixa" name="faixa"></select>
                 <fieldset id="senha-inicial-aluno">
-                    <label for="cadastro-aluno-senha">Senha inicial (mínimo de 8 caracteres)</label>
+                    <label for="cadastro-aluno-senha" data-texto="label-senha-inicial-minimo-de-8-caracteres-1">Senha inicial (mínimo de 8 caracteres)</label>
                     <input id="cadastro-aluno-senha" name="senha" type="password" minlength="8" maxlength="128" autocomplete="new-password" required>
                     <button class="btn-mini alternar-senha" data-alternar-senha type="button" aria-controls="cadastro-aluno-senha">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                             <path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7Z"/>
                             <circle cx="12" cy="12" r="3"/>
                         </svg>
-                        <span>Mostrar senha</span>
+                        <span data-texto="span-mostrar-senha-4">Mostrar senha</span>
                     </button>
                 </fieldset>
-                <button type="submit" class="btn-smais">Criar conta de aluno</button>
-                <button type="button" class="btn-mini btn-cancel cancelar-conta">Cancelar cadastro</button>
+                <button type="submit" class="btn-smais" data-texto="button-criar-conta-de-aluno-1">Criar conta de aluno</button>
+                <button type="button" class="btn-mini btn-cancel cancelar-conta" data-texto="button-cancelar-cadastro-1">Cancelar cadastro</button>
                 <p id="cadastro-aluno-feedback" role="status"></p>
             </form>
             <div class="app-form">
-                <label for="aluno-cadastrado">Alunos cadastrados</label>
+                <label for="aluno-cadastrado" data-texto="label-alunos-cadastrados-1">Alunos cadastrados</label>
                 <select id="aluno-cadastrado" required></select>
-                <button type="button" class="btn-mini btn-confirm editar-conta" disabled>Editar aluno</button>
-                <button type="button" class="btn-mini btn-delete excluir-conta" disabled>Excluir aluno</button>
+                <button type="button" class="btn-mini btn-confirm editar-conta" disabled data-texto="button-editar-aluno-1">Editar aluno</button>
+                <button type="button" class="btn-mini btn-delete excluir-conta" disabled data-texto="button-excluir-aluno-1">Excluir aluno</button>
                 <details class="mudar-senha-conta" hidden>
-                    <summary>Mudar senha</summary>
+                    <summary data-texto="summary-mudar-senha-1">Mudar senha</summary>
                     <form class="form-nova-senha">
-                        <label for="aluno-nova-senha">Nova senha do aluno (mínimo de 12 caracteres)</label>
+                        <label for="aluno-nova-senha" data-texto="label-nova-senha-do-aluno-minimo-de-12-caracteres-1">Nova senha do aluno (mínimo de 12 caracteres)</label>
                         <input id="aluno-nova-senha" name="senha" type="password" autocomplete="new-password" minlength="12" maxlength="128" required>
-                        <button type="submit" class="btn-mini btn-confirm" disabled>Salvar nova senha</button>
+                        <button type="submit" class="btn-mini btn-confirm" disabled data-texto="button-salvar-nova-senha-1">Salvar nova senha</button>
                     </form>
                 </details>
                 <p id="gestao-alunos-feedback" role="status"></p>
@@ -196,41 +196,41 @@
         </details>
 
         <details id="gestao-instrutores" class="app-card painel-secao" hidden>
-            <summary>Cadastrar instrutor</summary>
+            <summary data-texto="summary-cadastrar-instrutor-1">Cadastrar instrutor</summary>
             <form id="cadastro-instrutor" class="app-form">
-                <h3>Cadastrar instrutor</h3>
-                <label for="cadastro-instrutor-nome">Nome</label>
+                <h3 data-texto="h3-cadastrar-instrutor-1">Cadastrar instrutor</h3>
+                <label for="cadastro-instrutor-nome" data-texto="label-nome-2">Nome</label>
                 <input id="cadastro-instrutor-nome" name="nome" maxlength="120" required>
-                <label for="cadastro-instrutor-email">E-mail</label>
+                <label for="cadastro-instrutor-email" data-texto="label-e-mail-2">E-mail</label>
                 <input id="cadastro-instrutor-email" name="email" type="email" maxlength="150" required>
-                <label for="cadastro-instrutor-faixa">Faixa</label>
+                <label for="cadastro-instrutor-faixa" data-texto="label-faixa-2">Faixa</label>
                 <select id="cadastro-instrutor-faixa" name="faixa"></select>
                 <fieldset id="senha-inicial-instrutor">
-                    <label for="cadastro-instrutor-senha">Senha inicial (mínimo de 8 caracteres)</label>
+                    <label for="cadastro-instrutor-senha" data-texto="label-senha-inicial-minimo-de-8-caracteres-2">Senha inicial (mínimo de 8 caracteres)</label>
                     <input id="cadastro-instrutor-senha" name="senha" type="password" minlength="8" maxlength="128" autocomplete="new-password" required>
                     <button class="btn-mini alternar-senha" data-alternar-senha type="button" aria-controls="cadastro-instrutor-senha">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                             <path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7Z"/>
                             <circle cx="12" cy="12" r="3"/>
                         </svg>
-                        <span>Mostrar senha</span>
+                        <span data-texto="span-mostrar-senha-5">Mostrar senha</span>
                     </button>
                 </fieldset>
-                <button type="submit" class="btn-smais">Criar conta de instrutor</button>
-                <button type="button" class="btn-mini btn-cancel cancelar-conta">Cancelar cadastro</button>
+                <button type="submit" class="btn-smais" data-texto="button-criar-conta-de-instrutor-1">Criar conta de instrutor</button>
+                <button type="button" class="btn-mini btn-cancel cancelar-conta" data-texto="button-cancelar-cadastro-2">Cancelar cadastro</button>
                 <p id="cadastro-instrutor-feedback" role="status"></p>
             </form>
             <div class="app-form">
-                <label for="instrutor-cadastrado">Instrutores cadastrados</label>
+                <label for="instrutor-cadastrado" data-texto="label-instrutores-cadastrados-1">Instrutores cadastrados</label>
                 <select id="instrutor-cadastrado"></select>
-                <button type="button" class="btn-mini btn-confirm editar-conta" disabled>Editar instrutor</button>
-                <button type="button" class="btn-mini btn-delete excluir-conta" disabled>Excluir instrutor</button>
+                <button type="button" class="btn-mini btn-confirm editar-conta" disabled data-texto="button-editar-instrutor-1">Editar instrutor</button>
+                <button type="button" class="btn-mini btn-delete excluir-conta" disabled data-texto="button-excluir-instrutor-1">Excluir instrutor</button>
                 <details class="mudar-senha-conta" hidden>
-                    <summary>Mudar senha</summary>
+                    <summary data-texto="summary-mudar-senha-2">Mudar senha</summary>
                     <form class="form-nova-senha">
-                        <label for="instrutor-nova-senha">Nova senha do instrutor (mínimo de 12 caracteres)</label>
+                        <label for="instrutor-nova-senha" data-texto="label-nova-senha-do-instrutor-minimo-de-12-caracteres-1">Nova senha do instrutor (mínimo de 12 caracteres)</label>
                         <input id="instrutor-nova-senha" name="senha" type="password" autocomplete="new-password" minlength="12" maxlength="128" required>
-                        <button type="submit" class="btn-mini btn-confirm" disabled>Salvar nova senha</button>
+                        <button type="submit" class="btn-mini btn-confirm" disabled data-texto="button-salvar-nova-senha-2">Salvar nova senha</button>
                     </form>
                 </details>
                 <p id="gestao-instrutores-feedback" role="status"></p>
@@ -239,62 +239,80 @@
 
         <!-- Seção Exclusiva de Admin: Criar Nova Turma -->
         <details id="admin-only-section" class="app-card painel-secao">
-            <summary>Cadastrar Nova Turma</summary>
+            <summary data-texto="summary-cadastrar-nova-turma-1">Cadastrar Nova Turma</summary>
             <form id="form-nova-turma" class="app-form">
                 <div class="form-row-2">
                     <div>
-                        <label for="nt-modalidade">Modalidade</label>
-                        <input type="text" id="nt-modalidade" placeholder="Ex: Defesa Pessoal Feminina" required>
+                        <label for="nt-modalidade" data-texto="label-modalidade-1">Modalidade</label>
+                        <input type="text" id="nt-modalidade" placeholder="Ex: Defesa Pessoal Feminina" required data-texto="input-ex-defesa-pessoal-feminina-1">
                     </div>
                     <div>
-                        <label for="nt-publico">Público</label>
-                        <input type="text" id="nt-publico" placeholder="Ex: Adulto" required>
-                    </div>
-                </div>
-                <div class="form-row-2">
-                    <div>
-                        <label for="nt-dias">Dias da Semana</label>
-                        <input type="text" id="nt-dias" placeholder="Ex: Terça e Quinta" required>
-                    </div>
-                    <div>
-                        <label for="nt-horario">Horário</label>
-                        <input type="text" id="nt-horario" placeholder="Ex: 20:00 - 21:00" required>
+                        <label for="nt-publico" data-texto="label-publico-1">Público</label>
+                        <input type="text" id="nt-publico" placeholder="Ex: Adulto" required data-texto="input-ex-adulto-1">
                     </div>
                 </div>
                 <div class="form-row-2">
                     <div>
-                        <label for="nt-instrutor">Instrutor Responsável</label>
-                        <input type="text" id="nt-instrutor" placeholder="Ex: Mestre Erick Behrend" required>
+                        <label for="nt-dias" data-texto="label-dias-da-semana-1">Dias da Semana</label>
+                        <input type="text" id="nt-dias" placeholder="Ex: Terça e Quinta" required data-texto="input-ex-terca-e-quinta-1">
                     </div>
                     <div>
-                        <label for="nt-capacidade">Capacidade Máxima</label>
+                        <label for="nt-horario" data-texto="label-horario-1">Horário</label>
+                        <input type="text" id="nt-horario" placeholder="Ex: 20:00 - 21:00" required data-texto="input-ex-20-00-21-00-1">
+                    </div>
+                </div>
+                <div class="form-row-2">
+                    <div>
+                        <label for="nt-instrutor" data-texto="label-instrutor-responsavel-1">Instrutor Responsável</label>
+                        <input type="text" id="nt-instrutor" placeholder="Ex: Mestre Erick Behrend" required data-texto="input-ex-mestre-erick-behrend-1">
+                    </div>
+                    <div>
+                        <label for="nt-capacidade" data-texto="label-capacidade-maxima-1">Capacidade Máxima</label>
                         <input type="number" id="nt-capacidade" value="20" min="1" max="100" required>
                     </div>
                 </div>
-                <button type="submit" class="btn-smais">Salvar Nova Turma</button>
+                <button type="submit" class="btn-smais" data-texto="button-salvar-nova-turma-1">Salvar Nova Turma</button>
                 <p id="turma-admin-feedback" style="margin-top:1rem;font-size:1.5rem;"></p>
             </form>
             <form id="form-excluir-turma" class="app-form">
-                <label for="turma-cadastrada">Turmas cadastradas</label>
+                <label for="turma-cadastrada" data-texto="label-turmas-cadastradas-1">Turmas cadastradas</label>
                 <select id="turma-cadastrada" required>
-                    <option value="">Selecione uma turma</option>
+                    <option value="" data-texto="option-selecione-uma-turma-1">Selecione uma turma</option>
                 </select>
-                <button type="submit" class="btn-mini btn-delete" disabled>Excluir turma</button>
+                <button type="submit" class="btn-mini btn-delete" disabled data-texto="button-excluir-turma-1">Excluir turma</button>
                 <p id="turma-exclusao-feedback" role="status"></p>
             </form>
         </details>
 
         <details id="gestao-midias" class="app-card painel-secao" hidden>
-            <summary>Fotos e vídeos do site</summary>
+            <summary data-texto="summary-fotos-e-videos-do-site-1">Fotos e vídeos do site</summary>
             <form id="form-midia-site" class="app-form">
-                <label for="midia-site-item">Foto ou vídeo</label>
+                <label for="midia-site-item" data-texto="label-foto-ou-video-1">Foto ou vídeo</label>
                 <select id="midia-site-item" required></select>
                 <div id="midia-site-previa" class="midia-site-previa"></div>
-                <label id="midia-site-arquivo-label" for="midia-site-arquivo">Novo arquivo</label>
+                <label id="midia-site-arquivo-label" for="midia-site-arquivo" data-texto="label-novo-arquivo-1">Novo arquivo</label>
                 <input id="midia-site-arquivo" name="arquivo" type="file" required>
-                <button type="submit" class="btn-smais" disabled>Salvar mídia</button>
-                <button id="midia-site-restaurar" type="button" class="btn-mini btn-cancel" disabled>Restaurar original</button>
+                <button type="submit" class="btn-smais" disabled data-texto="button-salvar-midia-1">Salvar mídia</button>
+                <button id="midia-site-restaurar" type="button" class="btn-mini btn-cancel" disabled data-texto="button-restaurar-original-1">Restaurar original</button>
                 <p id="midia-site-feedback" role="status"></p>
+            </form>
+        </details>
+
+        <details id="gestao-textos" class="app-card painel-secao" hidden>
+            <summary>Textos e títulos do site</summary>
+            <form id="form-textos-site" class="app-form">
+                <label for="textos-site-pagina">Página</label>
+                <select id="textos-site-pagina" required></select>
+                <label for="textos-site-busca">Buscar trecho</label>
+                <input id="textos-site-busca" type="search" placeholder="Digite parte do texto" disabled>
+                <label for="textos-site-trecho">Trecho da página</label>
+                <select id="textos-site-trecho" required disabled></select>
+                <label for="textos-site-valor">Texto</label>
+                <textarea id="textos-site-valor" rows="5" maxlength="8000" disabled></textarea>
+                <p>Para remover um trecho, deixe o campo vazio e salve.</p>
+                <button type="submit" class="btn-smais" disabled>Salvar texto</button>
+                <button id="textos-site-restaurar" type="button" class="btn-mini btn-cancel" disabled>Restaurar original</button>
+                <p id="textos-site-feedback" role="status"></p>
             </form>
         </details>
 
@@ -303,32 +321,32 @@
         <!-- KPIs -->
         <div class="kpi-grid">
             <div class="kpi-card">
-                <span class="kpi-number" id="kpi-agendamentos">0</span>
-                <span class="kpi-label">Total de Agendamentos</span>
+                <span class="kpi-number" id="kpi-agendamentos" data-texto="span-0-1">0</span>
+                <span class="kpi-label" data-texto="span-total-de-agendamentos-1">Total de Agendamentos</span>
             </div>
             <div class="kpi-card">
-                <span class="kpi-number" id="kpi-pendentes">0</span>
-                <span class="kpi-label">Aguardando Confirmação</span>
+                <span class="kpi-number" id="kpi-pendentes" data-texto="span-0-2">0</span>
+                <span class="kpi-label" data-texto="span-aguardando-confirmacao-1">Aguardando Confirmação</span>
             </div>
             <div class="kpi-card">
-                <span class="kpi-number" id="kpi-contatos">0</span>
-                <span class="kpi-label">Mensagens de Contato</span>
+                <span class="kpi-number" id="kpi-contatos" data-texto="span-0-3">0</span>
+                <span class="kpi-label" data-texto="span-mensagens-de-contato-1">Mensagens de Contato</span>
             </div>
         </div>
 
         <!-- Tabela de Agendamentos Experimentais -->
         <details class="app-card painel-secao" style="margin-bottom:3rem;">
-            <summary><i class="fas fa-calendar-alt" aria-hidden="true"></i> Gestão de Aulas Experimentais</summary>
+            <summary data-texto="summary-gestao-de-aulas-experimentais-1"><i class="fas fa-calendar-alt" aria-hidden="true"></i> Gestão de Aulas Experimentais</summary>
             <div class="table-responsive">
                 <table class="app-table">
                     <thead>
                         <tr>
-                            <th>Protocolo</th>
-                            <th>Aluno / Contato</th>
-                            <th>Modalidade</th>
-                            <th>Data</th>
-                            <th>Status</th>
-                            <th>Ações (RBAC)</th>
+                            <th data-texto="th-protocolo-1">Protocolo</th>
+                            <th data-texto="th-aluno-contato-1">Aluno / Contato</th>
+                            <th data-texto="th-modalidade-1">Modalidade</th>
+                            <th data-texto="th-data-1">Data</th>
+                            <th data-texto="th-status-1">Status</th>
+                            <th data-texto="th-acoes-rbac-1">Ações (RBAC)</th>
                         </tr>
                     </thead>
                     <tbody id="tabela-agendamentos-body"></tbody>
@@ -338,16 +356,16 @@
 
         <!-- Tabela de Mensagens de Contato -->
         <details class="app-card painel-secao" style="margin-bottom:3rem;">
-            <summary><i class="fas fa-envelope-open-text" aria-hidden="true"></i> Mensagens do Formulário Institucional</summary>
+            <summary data-texto="summary-mensagens-do-formulario-institucional-1"><i class="fas fa-envelope-open-text" aria-hidden="true"></i> Mensagens do Formulário Institucional</summary>
             <div class="table-responsive">
                 <table class="app-table">
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>Visitante</th>
-                            <th>Mensagem</th>
-                            <th>Situação</th>
-                            <th>Ação</th>
+                            <th data-texto="th-id-1">ID</th>
+                            <th data-texto="th-visitante-1">Visitante</th>
+                            <th data-texto="th-mensagem-1">Mensagem</th>
+                            <th data-texto="th-situacao-1">Situação</th>
+                            <th data-texto="th-acao-1">Ação</th>
                         </tr>
                     </thead>
                     <tbody id="tabela-contatos-body"></tbody>
@@ -358,12 +376,14 @@
     </div>
 </section>
 
+<section class="textos-adicionais" data-texto-extra hidden></section>
 <section class="footer">
-    <div class="credit">created by <span>Gabriel G. de Avila Miranda</span> | all rights reserved</div>
+    <div class="credit" data-texto="div-created-by-1">created by <span data-texto="span-gabriel-g-de-avila-miranda-1">Gabriel G. de Avila Miranda</span> | all rights reserved</div>
 </section>
 
 <script src="./js/script.js"></script>
 <script src="./js/presencas.js"></script>
 <script src="./js/midias.js"></script>
+<script src="./js/textos.js"></script>
 </body>
 </html>

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agendar Aula Experimental — Behrend BJJ</title>
+    <title data-texto="title-agendar-aula-experimental-behrend-bjj-1">Agendar Aula Experimental — Behrend BJJ</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -17,26 +17,26 @@
         </a>
 
         <nav class="navbar">
-            <a href="index.html">Home</a>
-            <a href="sobre.html">Sobre</a>
+            <a href="index.html" data-texto="a-home-1">Home</a>
+            <a href="sobre.html" data-texto="a-sobre-1">Sobre</a>
             <li class="dropdown">
-                <a href="index.html#menu">Modalidades</a>
+                <a href="index.html#menu" data-texto="a-modalidades-1">Modalidades</a>
                 <div class="dropdown-menu">
-                    <a href="jiujitsuadulto.html">Jiu Jitsu Adulto</a>
-                    <a href="jiujitsuinfantil.html">Jiu Jitsu Infantil</a>
-                    <a href="nogi.html">Nogi</a>
+                    <a href="jiujitsuadulto.html" data-texto="a-jiu-jitsu-adulto-1">Jiu Jitsu Adulto</a>
+                    <a href="jiujitsuinfantil.html" data-texto="a-jiu-jitsu-infantil-1">Jiu Jitsu Infantil</a>
+                    <a href="nogi.html" data-texto="a-nogi-1">Nogi</a>
                 </div>
             </li>
-            <a href="horarios.html">Horários</a>
-            <a href="index.html#review">Unidades</a>
-            <a href="endereço.html">Endereço</a>
-            <a href="agendamento.html">Agende sua aula experimental</a>
-            <a href="painel.html">Painel</a>
-            <a href="confirmar-aula.html">Confirmar aula</a>
+            <a href="horarios.html" data-texto="a-horarios-1">Horários</a>
+            <a href="index.html#review" data-texto="a-unidades-1">Unidades</a>
+            <a href="endereço.html" data-texto="a-endereco-1">Endereço</a>
+            <a href="agendamento.html" data-texto="a-agende-sua-aula-experimental-1">Agende sua aula experimental</a>
+            <a href="painel.html" data-texto="a-painel-1">Painel</a>
+            <a href="confirmar-aula.html" data-texto="a-confirmar-aula-1">Confirmar aula</a>
         </nav>
 
         <div>
-            <a href="#form-agendamento" class="btn1">Começar agora</a>
+            <a href="#form-agendamento" class="btn1" data-texto="a-comecar-agora-1">Começar agora</a>
         </div>
 
         <div class="icons">
@@ -46,49 +46,49 @@
 </header>
 
 <section class="app-section" style="padding-top: 12rem;">
-    <h1 class="heading">Agende sua <span>Aula Experimental</span></h1>
-    <p class="section-subtitle">
+    <h1 class="heading" data-texto="h1-agende-sua-1">Agende sua <span data-texto="span-aula-experimental-1">Aula Experimental</span></h1>
+    <p class="section-subtitle" data-texto="p-escolha-a-modalidade-verifique-as-vagas-disponiv-1">
         Escolha a modalidade, verifique as vagas disponíveis em tempo real e receba seu protocolo imediato.
     </p>
 
     <div class="app-grid">
         <!-- Formulário de Agendamento -->
         <div class="app-card">
-            <h3><i class="fas fa-dumbbell"></i> Novo Agendamento</h3>
+            <h3 data-texto="h3-novo-agendamento-1"><i class="fas fa-dumbbell"></i> Novo Agendamento</h3>
             <form id="form-agendamento" class="app-form">
-                <label for="ag-nome">Nome completo *</label>
-                <input type="text" id="ag-nome" placeholder="Ex: Lucas Oliveira" required minlength="3">
+                <label for="ag-nome" data-texto="label-nome-completo-1">Nome completo *</label>
+                <input type="text" id="ag-nome" placeholder="Ex: Lucas Oliveira" required minlength="3" data-texto="input-ex-lucas-oliveira-1">
 
-                <label for="ag-email">E-mail *</label>
-                <input type="email" id="ag-email" placeholder="lucas@email.com" required>
+                <label for="ag-email" data-texto="label-e-mail-1">E-mail *</label>
+                <input type="email" id="ag-email" placeholder="lucas@email.com" required data-texto="input-lucas-email-com-1">
 
-                <label for="ag-telefone">Telefone / WhatsApp *</label>
-                <input type="tel" id="ag-telefone" placeholder="(61) 99999-0000" required>
+                <label for="ag-telefone" data-texto="label-telefone-whatsapp-1">Telefone / WhatsApp *</label>
+                <input type="tel" id="ag-telefone" placeholder="(61) 99999-0000" required data-texto="input-61-99999-0000-1">
 
-                <label for="turma-select">Turma e Horário *</label>
+                <label for="turma-select" data-texto="label-turma-e-horario-1">Turma e Horário *</label>
                 <select id="turma-select" required>
-                    <option value="">Carregando turmas da API /api/v1/turmas...</option>
+                    <option value="" data-texto="option-carregando-turmas-da-api-api-v1-turmas-1">Carregando turmas da API /api/v1/turmas...</option>
                 </select>
 
                 <div class="form-row-2">
                     <div>
-                        <label for="ag-data">Data da Aula *</label>
+                        <label for="ag-data" data-texto="label-data-da-aula-1">Data da Aula *</label>
                         <input type="date" id="ag-data" required>
                     </div>
                     <div>
-                        <label for="ag-nivel">Nível de Experiência *</label>
+                        <label for="ag-nivel" data-texto="label-nivel-de-experiencia-1">Nível de Experiência *</label>
                         <select id="ag-nivel" required>
-                            <option value="Iniciante">Iniciante (Primeira vez)</option>
-                            <option value="Intermediário">Intermediário</option>
-                            <option value="Avançado">Avançado / Atleta</option>
+                            <option value="Iniciante" data-texto="option-iniciante-primeira-vez-1">Iniciante (Primeira vez)</option>
+                            <option value="Intermediário" data-texto="option-intermediario-1">Intermediário</option>
+                            <option value="Avançado" data-texto="option-avancado-atleta-1">Avançado / Atleta</option>
                         </select>
                     </div>
                 </div>
 
-                <label for="ag-obs">Observações (opcional)</label>
-                <input type="text" id="ag-obs" placeholder="Precisa de kimono emprestado? Alguma restrição física?">
+                <label for="ag-obs" data-texto="label-observacoes-opcional-1">Observações (opcional)</label>
+                <input type="text" id="ag-obs" placeholder="Precisa de kimono emprestado? Alguma restrição física?" data-texto="input-precisa-de-kimono-emprestado-alguma-restricao-fi-1">
 
-                <button type="submit" class="btn-smais" style="width:100%;margin-top:1.5rem;">
+                <button type="submit" class="btn-smais" style="width:100%;margin-top:1.5rem;" data-texto="button-confirmar-agendamento-experimental-1">
                     Confirmar Agendamento Experimental
                 </button>
             </form>
@@ -98,30 +98,32 @@
 
         <!-- Consulta de Protocolo & Quadro de Vagas -->
         <div class="app-card">
-            <h3><i class="fas fa-search"></i> Consultar Meu Agendamento</h3>
-            <p style="font-size:1.4rem;color:#ccc;margin-bottom:1.5rem;">
+            <h3 data-texto="h3-consultar-meu-agendamento-1"><i class="fas fa-search"></i> Consultar Meu Agendamento</h3>
+            <p style="font-size:1.4rem;color:#ccc;margin-bottom:1.5rem;" data-texto="p-ja-agendou-digite-seu-numero-de-protocolo-ex-1">
                 Já agendou? Digite seu número de protocolo (ex: <code>BJJ-A1B2C3</code>) ou o e-mail cadastrado para acompanhar o status.
             </p>
             <form id="form-consulta-protocolo" class="app-form" style="margin-bottom:2rem;">
                 <div style="display:flex;gap:1rem;">
-                    <input type="text" id="consulta-termo" placeholder="Protocolo (BJJ-...) ou seu e-mail" required style="flex:1;">
-                    <button type="submit" class="btn-smais" style="margin-top:0;">Consultar</button>
+                    <input type="text" id="consulta-termo" placeholder="Protocolo (BJJ-...) ou seu e-mail" required style="flex:1;" data-texto="input-protocolo-bjj-ou-seu-e-mail-1">
+                    <button type="submit" class="btn-smais" style="margin-top:0;" data-texto="button-consultar-1">Consultar</button>
                 </div>
             </form>
             <div id="consulta-resultado"></div>
 
             <hr style="border-top:1px solid rgba(255,255,255,0.15);margin:2.5rem 0;">
 
-            <h3><i class="fas fa-clock"></i> Turmas e Vagas Disponíveis</h3>
+            <h3 data-texto="h3-turmas-e-vagas-disponiveis-1"><i class="fas fa-clock"></i> Turmas e Vagas Disponíveis</h3>
             <div id="turmas-cards-grid" class="turmas-grid"></div>
         </div>
     </div>
 </section>
 
+<section class="textos-adicionais" data-texto-extra hidden></section>
 <section class="footer">
-    <div class="credit">created by <span>Gabriel G. de Avila Miranda</span> | all rights reserved</div>
+    <div class="credit" data-texto="div-created-by-1">created by <span data-texto="span-gabriel-g-de-avila-miranda-1">Gabriel G. de Avila Miranda</span> | all rights reserved</div>
 </section>
 
 <script src="./js/script.js"></script>
+<script src="./js/textos.js"></script>
 </body>
 </html>

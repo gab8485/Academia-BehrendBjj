@@ -2215,3 +2215,22 @@ align-self: start;
 #midia-site-feedback {
     font-size: 1.5rem;
 }
+
+#gestao-textos[hidden],
+.textos-adicionais[hidden] {
+    display: none;
+}
+
+.textos-adicionais {
+    font-size: 1.7rem;
+    line-height: 1.6;
+}
+
+.textos-adicionais p + p {
+    margin-top: 1rem;
+}
+
+.textos-adicionais p,
+.texto-com-quebras {
+    white-space: pre-line;
+}
