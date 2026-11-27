@@ -14,6 +14,7 @@ from sqlalchemy.orm import Session
 from backend.database import Base, SessionLocal, engine, get_db, migrar_faixa_usuarios
 from backend.models import User
 from backend.eventos import router as eventos_router
+from backend.midias import ArquivosMidia, router as midias_router
 from backend.presencas import router as presencas_router
 from backend.schemas import (
     AgendamentoCreate,
@@ -76,6 +77,7 @@ def manifesto_app():
 
 app.include_router(presencas_router)
 app.include_router(eventos_router)
+app.include_router(midias_router)
 
 app.add_middleware(
     CORSMiddleware,
@@ -345,7 +347,7 @@ def marcar_contato_como_lido(
 # ==============================================================================
 
 if (PROJECT_ROOT / "img").exists():
-    app.mount("/img", StaticFiles(directory=str(PROJECT_ROOT / "img")), name="img")
+    app.mount("/img", ArquivosMidia(PROJECT_ROOT / "img"), name="img")
 
 if (PROJECT_ROOT / "js").exists():
     app.mount("/js", StaticFiles(directory=str(PROJECT_ROOT / "js")), name="js")

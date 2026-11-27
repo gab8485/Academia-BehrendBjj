@@ -284,6 +284,20 @@
             </form>
         </details>
 
+        <details id="gestao-midias" class="app-card painel-secao" hidden>
+            <summary>Fotos e vídeos do site</summary>
+            <form id="form-midia-site" class="app-form">
+                <label for="midia-site-item">Foto ou vídeo</label>
+                <select id="midia-site-item" required></select>
+                <div id="midia-site-previa" class="midia-site-previa"></div>
+                <label id="midia-site-arquivo-label" for="midia-site-arquivo">Novo arquivo</label>
+                <input id="midia-site-arquivo" name="arquivo" type="file" required>
+                <button type="submit" class="btn-smais" disabled>Salvar mídia</button>
+                <button id="midia-site-restaurar" type="button" class="btn-mini btn-cancel" disabled>Restaurar original</button>
+                <p id="midia-site-feedback" role="status"></p>
+            </form>
+        </details>
+
         <div id="rbac-role-notice" style="display:none;margin-bottom:2rem;"></div>
 
         <!-- KPIs -->
@@ -350,5 +364,6 @@
 
 <script src="./js/script.js"></script>
 <script src="./js/presencas.js"></script>
+<script src="./js/midias.js"></script>
 </body>
 </html>
