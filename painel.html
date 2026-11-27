@@ -316,6 +316,17 @@
             </form>
         </details>
 
+        <details id="gestao-tema" class="app-card painel-secao" hidden>
+            <summary>Aparência do site</summary>
+            <form id="form-tema-site" class="app-form">
+                <label for="tema-cor">Cor principal</label>
+                <input id="tema-cor" type="color" value="#0000ff">
+                <button type="submit" class="btn-smais" disabled>Salvar cor</button>
+                <button id="tema-restaurar" class="btn-mini btn-cancel" type="button" disabled>Restaurar azul padrão</button>
+                <p id="tema-feedback" role="status"></p>
+            </form>
+        </details>
+
         <div id="rbac-role-notice" style="display:none;margin-bottom:2rem;"></div>
 
         <!-- KPIs -->

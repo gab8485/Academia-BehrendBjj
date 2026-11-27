@@ -132,7 +132,7 @@ function setupContactForms() {
             evento.preventDefault();
             if (enviar.disabled) return;
             enviar.disabled = true;
-            feedback.style.color = "#93c5fd";
+            feedback.style.color = "var(--tema-claro, #93c5fd)";
             feedback.textContent = "Enviando mensagem…";
 
             try {
@@ -247,7 +247,7 @@ async function setupAgendamentoPage() {
                 resultBox.className = "alert-box success";
                 resultBox.innerHTML = `
                     <h4>🎉 Aula Experimental Agendada com Sucesso!</h4>
-                    <p><strong>Protocolo:</strong> <code style="font-size:1.8rem;color:#60a5fa;">${body.protocolo}</code></p>
+                    <p><strong>Protocolo:</strong> <code style="font-size:1.8rem;color:var(--tema-claro, #60a5fa);">${body.protocolo}</code></p>
                     <p><strong>Modalidade:</strong> ${body.modalidade_turma || "Selecionada"} (${body.data_aula})</p>
                     <p><strong>Status Atual:</strong> <span class="status-pill status-${body.status}">${body.status.toUpperCase()}</span></p>
                     <p>Guarde seu protocolo ou consulte abaixo com seu e-mail.</p>
@@ -270,7 +270,7 @@ async function setupAgendamentoPage() {
             const outBox = document.getElementById("consulta-resultado");
             if (!termo) return;
 
-            outBox.innerHTML = "<p style='color:#93c5fd;font-size:1.5rem;'>Consultando...</p>";
+            outBox.innerHTML = "<p style='color:var(--tema-claro, #93c5fd);font-size:1.5rem;'>Consultando...</p>";
             const queryParam = termo.includes("@")
                 ? `email=${encodeURIComponent(termo)}`
                 : `protocolo=${encodeURIComponent(termo)}`;
@@ -389,7 +389,7 @@ if (btnDemoInstrutor) btnDemoInstrutor.onclick = focarCampoEmail;
         const senha = document.getElementById("login-senha").value;
         const msg = document.getElementById("login-feedback");
         msg.textContent = "Autenticando...";
-        msg.style.color = "#93c5fd";
+        msg.style.color = "var(--tema-claro, #93c5fd)";
 
         try {
             const resp = await fetch(`${API_BASE}/auth/login`, {
@@ -698,9 +698,123 @@ window.marcarContatoLido = async function (id) {
     renderPainelState();
 };
 
+function configurarTemaSite() {
+    const corPadrao = "#0000ff";
+    const raiz = document.documentElement.style;
+    const painel = document.getElementById("gestao-tema");
+    const formulario = document.getElementById("form-tema-site");
+    const campo = document.getElementById("tema-cor");
+    const restaurar = document.getElementById("tema-restaurar");
+    const feedback = document.getElementById("tema-feedback");
+    const salvar = formulario?.querySelector('[type="submit"]');
+    let corSalva = corPadrao;
+    let carregado = false;
+    let salvando = false;
+
+    function aplicarCor(cor) {
+        if (!/^#[0-9a-f]{6}$/i.test(cor)) return;
+        const [r, g, b] = cor.slice(1).match(/../g).map(hex => {
+            const canal = parseInt(hex, 16) / 255;
+            return canal <= 0.04045 ? canal / 12.92 : ((canal + 0.055) / 1.055) ** 2.4;
+        });
+        const luminancia = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+        const variaveis = {
+            "--main-color": cor,
+            "--tema-botao": cor,
+            "--tema-destaque": luminancia > 0.23 ? cor : `color-mix(in srgb, ${cor} 48%, white)`,
+            "--tema-claro": `color-mix(in srgb, ${cor} 48%, white)`,
+            "--tema-borda": `color-mix(in srgb, ${cor} 78%, white)`,
+            "--tema-borda-suave": `color-mix(in srgb, ${cor} 45%, transparent)`,
+            "--tema-fundo": `color-mix(in srgb, ${cor} 28%, #13131a)`,
+            "--tema-texto-botao": luminancia > 0.179 ? "#000" : "#fff",
+        };
+        for (const [nome, valor] of Object.entries(variaveis)) {
+            if (cor === corPadrao) raiz.removeProperty(nome);
+            else raiz.setProperty(nome, valor);
+        }
+    }
+
+    function atualizarEditor() {
+        if (!formulario) return;
+        campo.disabled = salvar.disabled = !carregado || salvando;
+        restaurar.disabled = salvar.disabled || corSalva === corPadrao;
+    }
+
+    async function requisitarTema(opcoes) {
+        const resposta = await fetch(`${API_BASE}/tema`, { cache: "no-store", ...opcoes });
+        if (!resposta.ok) throw new Error("Não foi possível carregar ou salvar a cor.");
+        const { cor } = await resposta.json();
+        if (typeof cor !== "string" || !/^#[0-9a-f]{6}$/i.test(cor)) throw new Error("Cor indisponível.");
+        return cor.toLowerCase();
+    }
+
+    void requisitarTema().then(cor => {
+        corSalva = cor;
+        aplicarCor(cor);
+        if (campo) campo.value = cor;
+        carregado = true;
+        atualizarEditor();
+    }).catch(erro => {
+        if (feedback) feedback.textContent = erro.message;
+    });
+
+    if (!painel) return;
+
+    function fecharPrevia() {
+        campo.value = corSalva;
+        aplicarCor(corSalva);
+    }
+
+    function atualizarSessao() {
+        const usuario = JSON.parse(sessionStorage.getItem("behrend_user"));
+        painel.hidden = !(usuario?.papel === "admin" && sessionStorage.getItem("behrend_token"));
+        if (painel.hidden) {
+            painel.open = false;
+            fecharPrevia();
+        }
+    }
+
+    async function salvarCor(cor) {
+        const token = sessionStorage.getItem("behrend_token");
+        if (!token || !carregado || salvando) return;
+        salvando = true;
+        atualizarEditor();
+        feedback.textContent = "Salvando…";
+        try {
+            corSalva = await requisitarTema({
+                method: "PUT",
+                headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+                body: JSON.stringify({ cor }),
+            });
+            fecharPrevia();
+            feedback.textContent = "Cor salva.";
+        } catch (erro) {
+            fecharPrevia();
+            feedback.textContent = erro.message;
+        } finally {
+            salvando = false;
+            atualizarEditor();
+        }
+    }
+
+    campo.addEventListener("input", () => aplicarCor(campo.value));
+    painel.addEventListener("toggle", () => {
+        if (!painel.open) fecharPrevia();
+    });
+    formulario.addEventListener("submit", evento => {
+        evento.preventDefault();
+        void salvarCor(campo.value);
+    });
+    restaurar.addEventListener("click", () => salvarCor(corPadrao));
+    document.addEventListener("painel-sessao", atualizarSessao);
+    atualizarSessao();
+    atualizarEditor();
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     enrichNavigation();
     setupContactForms();
     setupAgendamentoPage();
     setupPainelPage();
+    configurarTemaSite();
 });
