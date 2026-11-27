@@ -2191,3 +2191,20 @@ align-self: start;
 .form-nova-senha > button {
     margin-top: 0.8rem;
 }
+
+#gestao-midias[hidden] {
+    display: none;
+}
+
+.midia-site-previa :is(img, video) {
+    display: block;
+    width: auto;
+    max-width: 100%;
+    max-height: 22rem;
+    margin-top: 1rem;
+    object-fit: contain;
+}
+
+#midia-site-feedback {
+    font-size: 1.5rem;
+}
