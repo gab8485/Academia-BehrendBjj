@@ -737,7 +737,7 @@ function configurarTemaSite() {
     function atualizarEditor() {
         if (!formulario) return;
         campo.disabled = salvar.disabled = !carregado || salvando;
-        restaurar.disabled = salvar.disabled || corSalva === corPadrao;
+        restaurar.disabled = salvar.disabled || (corSalva === corPadrao && campo.value === corPadrao);
     }
 
     async function requisitarTema(opcoes) {
@@ -763,6 +763,7 @@ function configurarTemaSite() {
     function fecharPrevia() {
         campo.value = corSalva;
         aplicarCor(corSalva);
+        atualizarEditor();
     }
 
     function atualizarSessao() {
@@ -774,20 +775,28 @@ function configurarTemaSite() {
         }
     }
 
-    async function salvarCor(cor) {
+    async function salvarCor(cor, voltarAoPadrao = false) {
         const token = sessionStorage.getItem("behrend_token");
         if (!token || !carregado || salvando) return;
         salvando = true;
         atualizarEditor();
-        feedback.textContent = "Salvando…";
+        if (voltarAoPadrao) {
+            campo.value = corPadrao;
+            aplicarCor(corPadrao);
+        }
+        feedback.textContent = voltarAoPadrao ? "Restaurando…" : "Salvando…";
         try {
-            corSalva = await requisitarTema({
-                method: "PUT",
-                headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-                body: JSON.stringify({ cor }),
-            });
+            const headers = { Authorization: `Bearer ${token}` };
+            const opcoes = voltarAoPadrao
+                ? { method: "DELETE", headers }
+                : {
+                    method: "PUT",
+                    headers: { ...headers, "Content-Type": "application/json" },
+                    body: JSON.stringify({ cor }),
+                };
+            corSalva = await requisitarTema(opcoes);
             fecharPrevia();
-            feedback.textContent = "Cor salva.";
+            feedback.textContent = voltarAoPadrao ? "Azul padrão restaurado." : "Cor salva.";
         } catch (erro) {
             fecharPrevia();
             feedback.textContent = erro.message;
@@ -797,7 +806,10 @@ function configurarTemaSite() {
         }
     }
 
-    campo.addEventListener("input", () => aplicarCor(campo.value));
+    campo.addEventListener("input", () => {
+        aplicarCor(campo.value);
+        atualizarEditor();
+    });
     painel.addEventListener("toggle", () => {
         if (!painel.open) fecharPrevia();
     });
@@ -805,7 +817,7 @@ function configurarTemaSite() {
         evento.preventDefault();
         void salvarCor(campo.value);
     });
-    restaurar.addEventListener("click", () => salvarCor(corPadrao));
+    restaurar.addEventListener("click", () => salvarCor(corPadrao, true));
     document.addEventListener("painel-sessao", atualizarSessao);
     atualizarSessao();
     atualizarEditor();
