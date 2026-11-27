@@ -106,15 +106,10 @@
         atualizarCampo();
     }
 
-    function sincronizarSessao() {
-        const usuario = JSON.parse(sessionStorage.getItem("behrend_user"));
-        const token = usuario?.papel === "admin" ? sessionStorage.getItem("behrend_token") : null;
-        if (token === tokenAdmin) return;
-        tokenAdmin = token;
+    function limparEditor() {
         consulta++;
-        painel.hidden = !token;
-        painel.open = false;
-        pagina.replaceChildren();
+        pagina.value = "";
+        seletor.value = "";
         originais.clear();
         alteracoes.clear();
         busca.value = "";
@@ -123,19 +118,34 @@
         atualizarSeletor();
     }
 
+    function sincronizarSessao() {
+        const usuario = JSON.parse(sessionStorage.getItem("behrend_user"));
+        const token = usuario?.papel === "admin" ? sessionStorage.getItem("behrend_token") : null;
+        if (token === tokenAdmin) return;
+        tokenAdmin = token;
+        painel.hidden = !token;
+        painel.open = false;
+        pagina.replaceChildren();
+        limparEditor();
+    }
+
     painel.addEventListener("toggle", async () => {
-        if (!painel.open || !tokenAdmin || pagina.options.length) return;
+        if (!painel.open) {
+            limparEditor();
+            return;
+        }
+        if (!tokenAdmin || pagina.options.length) return;
         const token = tokenAdmin;
         feedback.textContent = "Carregando páginas…";
         try {
             const resposta = await apiTextos("", { headers: autorizar(token) });
             const dados = await resposta.json();
-            if (token !== tokenAdmin) return;
+            if (token !== tokenAdmin || !painel.open) return;
             pagina.replaceChildren(new Option("Selecione uma página", ""));
             for (const [arquivo, nome] of Object.entries(dados)) pagina.add(new Option(nome, arquivo));
             feedback.textContent = "";
         } catch (erro) {
-            if (token === tokenAdmin) feedback.textContent = erro.message;
+            if (token === tokenAdmin && painel.open) feedback.textContent = erro.message;
         }
     });
 
@@ -183,14 +193,13 @@
                 body: JSON.stringify({ chave, texto }),
             });
             if (token !== tokenAdmin) return;
-            if (texto === null) alteracoes.delete(chave);
-            else alteracoes.set(chave, texto);
             if (alvo === paginaAtual) aplicarTexto(chave, texto);
-            busca.value = "";
-            atualizarSeletor();
-            feedback.textContent = texto === null ? "Texto original restaurado." : "Texto salvo.";
+            if (painel.open) {
+                limparEditor();
+                feedback.textContent = texto === null ? "Texto original restaurado." : "Texto salvo.";
+            }
         } catch (erro) {
-            if (token === tokenAdmin) feedback.textContent = erro.message;
+            if (token === tokenAdmin && painel.open) feedback.textContent = erro.message;
         } finally {
             salvando = false;
             pagina.disabled = false;
