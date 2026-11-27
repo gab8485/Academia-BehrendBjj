@@ -677,7 +677,10 @@ background:transparent;
 }
 
 .about .row .image img{
+    display: block;
     width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
 }
 .about .row .content{
     flex:1 1 45rem;
@@ -1708,6 +1711,8 @@ nav li a{
         display: block;
         width: 100%;
         height: auto;
+        aspect-ratio: 1280 / 591;
+        object-fit: cover;
     }
 
     .home-container .home {
@@ -1760,7 +1765,7 @@ background-color: #15151f;
 }
 .menu .box-container .box.card-adulto,
 .menu .box-container .box.card-adulto:hover {
-    background: #15151f url("./img/bjj1.jpeg") center top / contain no-repeat;
+    background: #15151f url("./img/bjj1.jpeg") center / cover no-repeat;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
@@ -1779,7 +1784,7 @@ align-self: start;
 }
 .menu .box-container .box.card-nogi,
 .menu .box-container .box.card-nogi:hover {
-     background: #15151f url("./img/nogi3.jpeg") center top / contain no-repeat;
+     background: #15151f url("./img/nogi3.jpeg") center / cover no-repeat;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
@@ -1821,6 +1826,8 @@ align-self: start;
         display: block;
         width: 100%;
         height: auto;
+        aspect-ratio: 4 / 3;
+        object-fit: cover;
     }
 
     .capa-sobre .heading {
@@ -1830,7 +1837,7 @@ align-self: start;
 }
 @media (max-width: 768px) {
     .homesobre-container {
-        background-size: contain;
+        background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
     }
@@ -1851,7 +1858,7 @@ align-self: start;
         margin-top: 220px;
         box-sizing: border-box;
         background-position: center center;
-        background-size: contain;
+        background-size: cover;
         background-repeat: no-repeat;
     }
 
