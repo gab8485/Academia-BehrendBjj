@@ -48,7 +48,7 @@ class PerfilConta(BaseModel):
 
 
 class CadastroConta(PerfilConta):
-    senha: str = Field(min_length=12, max_length=128)
+    senha: str = Field(min_length=8, max_length=128)
 
 
 def aulas_da_grade(dias_anteriores: int = 0):
